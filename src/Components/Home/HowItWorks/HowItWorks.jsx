@@ -6,9 +6,9 @@ import Lottie from "lottie-react";
   Replace these with the actual paths to your JSON animation files
 */
 import TrustService from "../../../assets/assests/high five.json";
-import Step1 from "../../../assets/assests/GPS Location Animation.json";
-import Step2 from "../../../assets/assests/Payment Successful Animation.json";
-import Step3 from "../../../assets/assests/Yellow delivery guy.json";
+import Step1 from "../../../assets/assests/Computer guy sitting at a computer.json";
+import Step2 from "../../../assets/assests/Package delivery.json";
+import Step3 from "../../../assets/assests/Delivery.json";
 
 const HowItWorks = () => {
   const [step, setStep] = useState(1);
@@ -28,9 +28,9 @@ const HowItWorks = () => {
             A service you can trust
           </h2>
           <p className="text-gray-600 max-w-xl">
-            pandago is part of the foodpanda group, so you can rely on our large
-            network of local couriers to provide the best last mile delivery
-            service.
+            PotheGo is an intelligent parcel booking, tracking, and delivery
+            platform, designed to ensure fast, reliable and hassle-free
+            deliveries powered by smart technology.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ const HowItWorks = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* Left: animation changes by step */}
         <div className="flex justify-center">
-          <div className="w-72 h-72">
+          <div className="w-90 h-90">
             <Lottie animationData={stepAnimations[step]} loop={true} />
           </div>
         </div>
@@ -60,18 +60,18 @@ const HowItWorks = () => {
           {[
             {
               id: 1,
-              title: "Input your order details",
-              desc: "Set your pick-up and drop-off points. Any relevant details you'd like to share? Add 'em here!",
+              title: "Enter your parcel details",
+              desc: "Set your pick-up and drop-off locations, and add any special instructions for a smooth delivery.",
             },
             {
               id: 2,
-              title: "Wait for your order to be picked up",
-              desc: "After we confirm your request, a delivery will be created.",
+              title: "Wait for pickup confirmation",
+              desc: "Once your request is confirmed, a courier will be assigned to pick up your parcel.",
             },
             {
               id: 3,
-              title: "Track your delivery",
-              desc: "Track your parcel or share its tracking details with your customer.",
+              title: "Track your delivery in real time",
+              desc: "Follow your parcel’s journey live or share tracking details with your customer for full transparency.",
             },
           ].map((item) => (
             <button
@@ -84,7 +84,7 @@ const HowItWorks = () => {
               <div
                 className={`flex-none w-9 h-9 rounded-full font-bold flex items-center justify-center ${
                   step === item.id
-                    ? "bg-pink-500 text-white"
+                    ? "bg-[#FA2A3B] text-white"
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
