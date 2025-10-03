@@ -3,6 +3,7 @@ import Banner from "./Banner/Banner";
 import WhyPotheGo from "./WhyPotheGo/WhyPotheGo";
 import PricingSection from "./PricingSection/PricingSection";
 import HowItWorks from "./HowItWorks/HowItWorks";
+import FAQ from "./FAQ/FAQ";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <WhyPotheGo />
       <PricingSection />
       <HowItWorks />
+      <FAQ />
     </div>
   );
 };
