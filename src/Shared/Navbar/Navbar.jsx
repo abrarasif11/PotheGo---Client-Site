@@ -113,7 +113,7 @@ const Navbar = () => {
           </Link>
         )} */}
 
-        <Link to="/signin">
+        <Link to="/signup">
           <button className="btn btn-outline border-[#FA2A3B] text-[#FA2A3B] ml-2">
             Sign Up
           </button>
