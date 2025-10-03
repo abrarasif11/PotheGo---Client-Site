@@ -42,7 +42,7 @@ const HowItWorks = () => {
       </div>
 
       {/* Spacer */}
-      <div className="mt-12" />
+      <div className="" />
 
       {/* How does it work */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
