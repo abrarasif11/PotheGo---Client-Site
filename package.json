@@ -12,8 +12,10 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
     "daisyui": "^5.1.26",
+    "lottie-react": "^2.4.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.9.3",
     "tailwindcss": "^4.1.14"
   },
