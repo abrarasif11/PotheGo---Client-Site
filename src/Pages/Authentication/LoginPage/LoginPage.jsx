@@ -88,8 +88,8 @@ const LoginPage = () => {
             {/* Register */}
             <p className="text-sm text-center text-gray-600">
               Don’t have any account?{" "}
-              <Link to="/register" className="text-[#FA2A3B] font-medium">
-                Register
+              <Link to="/signup" className="text-[#FA2A3B] font-medium">
+                Sign Up
               </Link>
             </p>
 
@@ -119,7 +119,7 @@ const LoginPage = () => {
 
         {/* Right Side – Image */}
         <div className="hidden md:flex items-center justify-center bg-[#FAFAF7]">
-        <div className="w-150 h-150 mb-4">
+        <div className="w-300 h-100 mb-4">
                 <Lottie animationData={loginLottie} loop={true} />
               </div>
         </div>
