@@ -4,9 +4,21 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import loginLottie from "../../../assets/assests/Delivery Service-Delivery man.json";
 import useAuth from "../../../hooks/useAuth";
+import { useForm } from "react-hook-form";
 
-const LoginPage = () => {
-  const { signInWithGoogle } = useAuth();
+const SignUpPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { signInWithGoogle, createUser } = useAuth();
+  const onSubmit = (data) => {
+    console.log(data);
+    createUser(data.email, data.password).then((result) => {
+      console.log(result.user);
+    });
+  };
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((res) => {
@@ -24,7 +36,10 @@ const LoginPage = () => {
       <div className="grid md:grid-cols-2 w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Left Side – Login Form */}
         <div className="flex flex-col justify-center px-10 py-16">
-          <form className="w-full max-w-md mx-auto space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-md mx-auto space-y-6"
+          >
             {/* Title */}
             <div>
               <h1 className="text-5xl mb-2 font-bold text-gray-900">
@@ -44,6 +59,7 @@ const LoginPage = () => {
               <input
                 type="name"
                 required
+                {...register("name")}
                 id="name"
                 placeholder="Name"
                 className="w-full mt-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E02032]"
@@ -60,6 +76,7 @@ const LoginPage = () => {
               <input
                 type="email"
                 required
+                {...register("email")}
                 id="email"
                 placeholder="Email"
                 className="w-full mt-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E02032]"
@@ -77,6 +94,11 @@ const LoginPage = () => {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  {...register("password", {
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                    required: true,
+                  })}
                   id="password"
                   placeholder="Password"
                   className="w-full mt-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E02032]"
@@ -93,7 +115,15 @@ const LoginPage = () => {
                   )}
                 </button>
               </div>
-
+              {errors.password?.type === "required" && (
+                <p className="text-red-700 mt-2">Password is required</p>
+              )}
+              {errors.password?.type === "pattern" && (
+                <p className="text-red-700 mt-2">
+                  Password must be uppercase, lowercase, number, special char,
+                  min 6 characters
+                </p>
+              )}
               <div className="mt-2">
                 <Link
                   to="/forgetPass"
@@ -156,4 +186,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
