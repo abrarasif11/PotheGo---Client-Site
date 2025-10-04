@@ -3,8 +3,19 @@ import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import loginLottie from "../../../assets/assests/Delivery Service-Delivery man.json";
+import useAuth from "../../../hooks/useAuth";
 
 const LoginPage = () => {
+  const { signInWithGoogle } = useAuth();
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((res) => {
+        console.log(res.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -118,6 +129,7 @@ const LoginPage = () => {
 
             {/* Google Login */}
             <button
+              onClick={handleGoogleSignIn}
               type="button"
               className="w-full flex items-center justify-center gap-3 border rounded-md py-3 bg-gray-100 hover:bg-gray-200 transition"
             >
