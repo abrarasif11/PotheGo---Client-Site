@@ -39,7 +39,7 @@ const PricingSection = () => {
           <h2 className="text-3xl font-bold mb-4">All you need, delivered</h2>
           <p className="text-gray-600 text-lg">
             From snacks to shopping, our platform helps connect businesses,
-            customers, and couriers — so your items arrive quickly and
+            customers and couriers — so your items arrive quickly and
             conveniently.
           </p>
         </div>

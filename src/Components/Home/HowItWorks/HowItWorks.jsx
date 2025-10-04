@@ -20,7 +20,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
+    <section className="max-w-7xl mx-auto mb-20">
       {/* A service you can trust */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="order-2 md:order-1">

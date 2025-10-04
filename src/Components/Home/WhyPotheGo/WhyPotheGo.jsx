@@ -11,7 +11,7 @@ const WhyPotheGo = () => {
     {
       title: "Real-time tracking",
       description:
-        "Keep tabs on your order from pick-up to drop-off. Input your details, and we'll do the rest.",
+        "Keep tabs on your order from pick-up to drop-off. Input your details and we'll do the rest.",
       animation: trackingAnimation,
     },
     {
@@ -23,7 +23,7 @@ const WhyPotheGo = () => {
     {
       title: "Safe and reliable",
       description:
-        "With Pothego’s reliable rider network, your deliveries are safe, fast, and stress-free.",
+        "With Pothego’s reliable rider network, your deliveries are safe, fast and stress-free.",
       animation: safeAnimation,
     },
   ];
