@@ -4,6 +4,7 @@ import Home from "../Components/Home/Home";
 import LoginPage from "../Pages/Authentication/LoginPage/LoginPage";
 import SignupPage from "../Pages/Authentication/SignupPage/SignupPage";
 import Coverage from "../Pages/Coverage/Coverage";
+import SendParcel from "../Pages/SendParcel/SendParcel";
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "/sendParcel",
+        element: <SendParcel />,
+        loader: () => fetch("ServiceCenter.json"),
       },
       {
         path: "/login",
