@@ -20,6 +20,9 @@ export const router = createBrowserRouter([
         loader: () => fetch("ServiceCenter.json"),
       },
       {
+        path: "/sendParcel",
+      },
+      {
         path: "/login",
         element: <LoginPage />,
       },
