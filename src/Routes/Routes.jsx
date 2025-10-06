@@ -7,6 +7,7 @@ import Coverage from "../Pages/Coverage/Coverage";
 import SendParcel from "../Pages/SendParcel/SendParcel";
 import BeARider from "../Pages/BeARider/BeARider";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import DashboardLayout from "../Layouts/DashboardLayout";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path : '/dashboard'
-  }
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+  },
 ]);
