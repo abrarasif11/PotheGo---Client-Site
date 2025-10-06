@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-// import toast, { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useLoaderData } from "react-router";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const SendParcel = () => {
   const serviceCenter = useLoaderData() || [];
@@ -13,16 +15,16 @@ const SendParcel = () => {
     register,
     handleSubmit,
     watch,
-    // reset,
-    // setValue,
+    reset,
+    setValue,
     formState: { errors },
   } = useForm();
-  // const { user } = useAuth();
-  // const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  // useEffect(() => {
-  //   if (user?.email) setValue("senderEmail", user.email);
-  // }, [user, setValue]);
+  useEffect(() => {
+    if (user?.email) setValue("senderEmail", user.email);
+  }, [user, setValue]);
 
   // const navigate = useNavigate();
   const senderRegion = watch("senderRegion");
@@ -105,7 +107,7 @@ const SendParcel = () => {
     const parcelData = {
       ...data,
       parcelType,
-      // createdBy: user?.email || "unknown",
+      createdBy: user?.email || "unknown",
       createdAt: new Date().toISOString(),
       trackingId: generateTrackingId(),
       status: "Pending",
@@ -116,66 +118,65 @@ const SendParcel = () => {
     setConfirmData(parcelData);
   };
 
-  // const handleFinalConfirm = async () => {
-  //   if (!confirmData) return;
+  const handleFinalConfirm = async () => {
+    if (!confirmData) return;
 
-  //   const payload = { ...confirmData, price: priceBreak?.selected?.total ?? 0 };
+    const payload = { ...confirmData, price: priceBreak?.selected?.total ?? 0 };
 
-  //   try {
-  //     // 1) Save parcel
-  //     const res = await axiosSecure.post("/parcels", payload);
+    try {
+      // 1) Save parcel
+      const res = await axiosSecure.post("/parcels", payload);
 
-  //     // Some backends return { success: true }, others return insertedId — handle both.
-  //     const saved =
-  //       Boolean(res?.data?.success) || Boolean(res?.data?.insertedId);
+      // Some backends return { success: true }, others return insertedId — handle both.
+      const saved =
+        Boolean(res?.data?.success) || Boolean(res?.data?.insertedId);
 
-  //     if (saved) {
-  //       // 2) Create tracking log in the format your backend expects
-  //       try {
-  //         const trackingPayload = {
-  //           tracking_id: confirmData.trackingId, // snake_case to match backend
-  //           status: "SUBMITTED", // use your status enum: SUBMITTED | PAID | RIDER_ASSIGNED | PICKED_UP | DELIVERED
-  //           details: `Parcel submitted by ${
-  //             user?.displayName || user?.email || "Unknown"
-  //           }`,
-  //           updated_by: user?.email || "system",
-  //           // backend will add timestamp, but we can include it optionally
-  //           timestamp: new Date().toISOString(),
-  //         };
+      if (saved) {
+        // 2) Create tracking log in the format your backend expects
+        try {
+          const trackingPayload = {
+            tracking_id: confirmData.trackingId,
+            status: "SUBMITTED",
+            details: `Parcel submitted by ${
+              user?.displayName || user?.email || "Unknown"
+            }`,
+            updated_by: user?.email || "system",
 
-  //         await axiosSecure.post("/trackings", trackingPayload);
-  //       } catch (trackErr) {
-  //         // don't block the success flow — just log
-  //         console.error("Failed to create initial tracking log:", trackErr);
-  //       }
+            timestamp: new Date().toISOString(),
+          };
 
-  //       toast.success("Parcel booked & tracking started!", {
-  //         duration: 3000,
-  //         position: "top-right",
-  //       });
+          await axiosSecure.post("/trackings", trackingPayload);
+        } catch (trackErr) {
+          console.error("Failed to create initial tracking log:", trackErr);
+        }
 
-  //       // reset UI
-  //       reset();
-  //       setParcelType("Document");
-  //       setConfirmData(null);
-  //       setPriceBreak(null);
+        toast.success("Parcel booked & tracking started!", {
+          duration: 3000,
+          position: "top-right",
+        });
 
-  //       // navigate after a short delay so user sees toast
-  //       navigate("/dashboard/myParcels");
-  //     } else {
-  //       toast.error("Failed to save parcel. Try again.");
-  //       console.error("Parcel save response:", res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Save Error:", error);
-  //     toast.error(" Error saving parcel. Check console.");
-  //   }
-  // };
+        // reset UI
+        reset();
+        setParcelType("Document");
+        setConfirmData(null);
+        setPriceBreak(null);
+
+        // // navigate after a short delay so user sees toast
+        // navigate("/dashboard/myParcels");
+      } else {
+        toast.error("Failed to save parcel. Try again.");
+        console.error("Parcel save response:", res?.data);
+      }
+    } catch (error) {
+      console.error("Save Error:", error);
+      toast.error(" Error saving parcel. Check console.");
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow p-8">
-      {/* <Toaster /> */}
-      <h2 className="text-3xl font-bold text-[#03464D] mb-2">Add Parcel</h2>
+      <Toaster />
+      <h2 className="text-3xl font-bold text-[#E02032] mb-2">Add Parcel</h2>
       <p className="text-gray-600 mb-6">Enter your parcel details</p>
 
       {!confirmData ? (
@@ -389,7 +390,7 @@ const SendParcel = () => {
           <div className="mt-6">
             <button
               type="submit"
-              className="bg-[#FA2A3B] text-white hover:bg-[#E02032] px-6 py-3 rounded-lg font-semibold"
+              className="bg-[#FA2A3B] hover:bg-[#E02032] text-white px-6 py-3 rounded-lg font-semibold"
             >
               Proceed to Confirm Booking
             </button>
@@ -456,8 +457,8 @@ const SendParcel = () => {
           </div>
           <div className="flex justify-center gap-4">
             <button
-              // onClick={handleFinalConfirm}
-              className="bg-[#FA2A3B] text-white hover:bg-[#E02032] px-6 py-3 rounded-lg font-semibold"
+              onClick={handleFinalConfirm}
+              className="bg-[#FA2A3B] hover:bg-[#E02032] text-white px-6 py-3 rounded-lg font-semibold"
             >
               Confirm Booking
             </button>
