@@ -21,7 +21,7 @@ const MyParcel = () => {
     },
   });
 
-  // SweetAlert2 custom color style
+  // SweetAlert2 custom style
   const swalWithCustomStyle = Swal.mixin({
     confirmButtonColor: "#FA2A3B",
     cancelButtonColor: "#6b7280",
@@ -46,7 +46,7 @@ const MyParcel = () => {
     });
   };
 
-  // Handle Payment
+  
   const handlePay = (parcel) => {
     swalWithCustomStyle
       .fire({
@@ -63,37 +63,43 @@ const MyParcel = () => {
             "Status updated to Paid.",
             "success"
           );
-          // Optional backend update:
-          // axiosSecure.patch(`/parcels/${parcel._id}`, { status: "Paid" }).then(() => refetch());
         }
       });
   };
 
-  // Handle Delete
   const handleDelete = (id) => {
     swalWithCustomStyle
       .fire({
         title: "Are you sure?",
-        text: "This parcel will be permanently deleted.",
+        text: "This parcel will be permanently deleted!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Delete",
+        confirmButtonText: "Yes, Delete it!",
       })
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await axiosSecure.delete(`/parcels/${id}`);
-            swalWithCustomStyle.fire(
-              "Deleted!",
-              "Parcel removed successfully.",
-              "success"
-            );
-            refetch();
+            const res = await axiosSecure.delete(`/parcels/${id}`);
+
+            if (res.status === 200 || res.data?.deletedCount > 0) {
+              await swalWithCustomStyle.fire(
+                "Deleted!",
+                "Parcel has been successfully deleted.",
+                "success"
+              );
+              refetch();
+            } else {
+              swalWithCustomStyle.fire(
+                "Error!",
+                "Failed to delete parcel. Try again later.",
+                "error"
+              );
+            }
           } catch (error) {
-            console.error(error);
+            console.error("Delete error:", error);
             swalWithCustomStyle.fire(
               "Error!",
-              "Failed to delete parcel.",
+              "Server error occurred during deletion.",
               "error"
             );
           }
@@ -109,20 +115,22 @@ const MyParcel = () => {
     );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-[#FA2A3B]">My Parcels</h2>
+    <div className="p-4 sm:p-6 max-w-6xl mx-auto">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#FA2A3B] text-center sm:text-left">
+        My Parcels
+      </h2>
 
-      <div className="overflow-x-auto shadow-xl rounded-2xl border border-gray-200">
-        <table className="table w-full">
-          <thead className="bg-[#FA2A3B]/10 text-gray-700 uppercase text-sm">
+      <div className="overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-200">
+        <table className="table w-full text-sm sm:text-base">
+          <thead className="bg-[#FA2A3B]/10 text-gray-700 uppercase text-xs sm:text-sm">
             <tr>
               <th>#</th>
               <th>Parcel Name</th>
               <th>Type</th>
-              <th>Tracking ID</th>
+              <th className="hidden sm:table-cell">Tracking ID</th>
               <th>Price</th>
               <th>Status</th>
-              <th>Created At</th>
+              <th className="hidden md:table-cell">Created At</th>
               <th className="text-center">Actions</th>
             </tr>
           </thead>
@@ -141,17 +149,23 @@ const MyParcel = () => {
                   className="hover:bg-[#FA2A3B]/5 transition duration-150"
                 >
                   <td className="font-medium text-gray-700">{index + 1}</td>
-                  <td className="font-semibold">{parcel.parcelName}</td>
-                  <td>
-                    <span className="  text-black">{parcel.parcelType}</span>
+                  <td className="font-semibold break-words">
+                    {parcel.parcelName}
                   </td>
-                  <td className="text-sm text-gray-600">{parcel.trackingId}</td>
+                  <td>
+                    <span className="text-black text-xs sm:text-sm">
+                      {parcel.parcelType}
+                    </span>
+                  </td>
+                  <td className="hidden sm:table-cell text-gray-600 text-xs sm:text-sm">
+                    {parcel.trackingId}
+                  </td>
                   <td className="font-semibold text-gray-800">
                     ৳ {parcel.price}
                   </td>
                   <td>
                     <span
-                      className={`badge text-white ${
+                      className={`badge text-white text-xs sm:text-sm ${
                         parcel.status === "Paid"
                           ? "bg-green-500"
                           : "bg-[#FA2A3B]"
@@ -160,25 +174,25 @@ const MyParcel = () => {
                       {parcel.status}
                     </span>
                   </td>
-                  <td className="text-sm text-gray-500">
-                    {new Date(parcel.createdAt).toLocaleString()}
+                  <td className="hidden md:table-cell text-gray-500 text-xs">
+                    {new Date(parcel.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="flex items-center justify-center gap-3">
+                  <td className="flex items-center justify-center gap-2 sm:gap-3">
                     <button
                       onClick={() => handleView(parcel)}
-                      className="btn btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
                     >
                       <FaEye />
                     </button>
                     <button
                       onClick={() => handlePay(parcel)}
-                      className="btn btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
                     >
                       <FaMoneyBillWave />
                     </button>
                     <button
                       onClick={() => handleDelete(parcel._id)}
-                      className="btn btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
                     >
                       <FaTrashAlt />
                     </button>
