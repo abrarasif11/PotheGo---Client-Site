@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
-
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { FaBoxOpen } from "react-icons/fa";
 const DashboardLayout = () => {
   //   const { role, roleLoading } = useUserRole();
   //   if (roleLoading) return <Loader />;
@@ -33,7 +33,9 @@ const DashboardLayout = () => {
               </svg>
             </label>
           </div>
-          <div className="mx-2 lg:hidden text-[#FA2A3B] flex-1 px-2">Dashboard</div>
+          <div className="mx-2 lg:hidden text-[#FA2A3B] flex-1 px-2">
+            Dashboard
+          </div>
         </div>
         {/* Page content here */}
         <Outlet />
@@ -54,6 +56,19 @@ const DashboardLayout = () => {
           >
             <p className="text-3xl text-[#FA2A3B] font-semibold">potheGo</p>
           </Link>
+          <li>
+            <NavLink
+              to="/dashboard/myParcels"
+              className={({ isActive }) =>
+                `flex items-center mt-10 gap-2 ${
+                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                }`
+              }
+            >
+              <FaBoxOpen className="w-5 h-5" />
+              My Parcels
+            </NavLink>
+          </li>
         </ul>
       </div>
     </div>
