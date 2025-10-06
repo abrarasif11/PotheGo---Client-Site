@@ -174,7 +174,7 @@ const SignUpPage = () => {
             </button>
             <p className="text-sm text-center text-gray-600">
               <Link
-                to="/login"
+                to="/beArider"
                 className="text-white bg-[#FA2A3B] hover:bg-[#E02032] btn font-medium"
               >
                 Be a Rider ?{" "}
