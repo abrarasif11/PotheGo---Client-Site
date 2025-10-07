@@ -9,6 +9,7 @@ import BeARider from "../Pages/BeARider/BeARider";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import MyParcel from "../Pages/Dashboard/MyParcel/MyParcel";
+import Payment from "../Pages/Dashboard/Payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: "myParcels",
         Component: MyParcel,
+      },
+      {
+        path: "payment/:id",
+        Component: Payment,
       },
     ],
   },
