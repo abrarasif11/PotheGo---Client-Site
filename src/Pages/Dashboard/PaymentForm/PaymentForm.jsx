@@ -27,6 +27,8 @@ const PaymentForm = () => {
   console.log(parcelInfo);
 
   const amount = parcelInfo.price;
+  const amountInCents = amount * 100;
+  console.log(amountInCents);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +52,30 @@ const PaymentForm = () => {
     } else {
       setError("");
       console.log("Payment Method", paymentMethod);
+    }
+
+    //Create Payment intent//
+    const res = await axiosSecure.post("create-payment-intent", {
+      amountInCents,
+      id,
+    });
+    const clientSecret = res.data.clientSecret;
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: "Yennefer",
+        },
+      },
+    });
+    if (result.error) {
+      console.log(result.error.message);
+    } else {
+      if (result.paymentIntent.status === "succeeded") {
+        console.log("Payment Success!!!");
+        console.log(result);
+      }
     }
   };
   return (
