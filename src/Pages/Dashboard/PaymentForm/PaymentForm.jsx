@@ -1,11 +1,11 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import React from "react";
+import React, { useState } from "react";
 
 const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-
-  const handSubmit = (e) => {
+  const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) {
       return;
@@ -15,15 +15,32 @@ const PaymentForm = () => {
     if (!card) {
       return;
     }
-    
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      setError(error.message);
+      console.log("error", error);
+    } else {
+      setError("");
+      console.log("Payment Method", paymentMethod);
+    }
   };
   return (
-    <form onSubmit={handSubmit}>
-      <CardElement>
-        <button type="submit" disabled={!stripe}>
-          Pay For Parcel
-        </button>
-      </CardElement>
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto p-4">
+      <CardElement className="border p-2 rounded" />
+      <button
+        type="submit"
+        disabled={!stripe}
+        className="mt-4 bg-[#FA2A3B] text-white px-4 py-2 rounded hover:bg-[#E02032]"
+      >
+        Pay ৳{}
+      </button>
+
+      {error && <p className="text-red-600 mt-4">{error}</p>}
     </form>
   );
 };
