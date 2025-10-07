@@ -1,10 +1,33 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loader from "../../../Shared/Loader/Loader";
 
 const PaymentForm = () => {
+  const { id } = useParams();
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState("");
+  const axiosSecure = useAxiosSecure();
+
+  const { isPending, data: parcelInfo = {} } = useQuery({
+    queryKey: ["parcels", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`parcels/${id}`);
+      return res.data;
+    },
+  });
+
+  if (isPending) {
+    return <Loader />;
+  }
+
+  console.log(parcelInfo);
+
+  const amount = parcelInfo.price;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) {
@@ -37,7 +60,7 @@ const PaymentForm = () => {
         disabled={!stripe}
         className="mt-4 bg-[#FA2A3B] text-white px-4 py-2 rounded hover:bg-[#E02032]"
       >
-        Pay ৳{}
+        Pay ৳{amount}
       </button>
 
       {error && <p className="text-red-600 mt-4">{error}</p>}
