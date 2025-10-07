@@ -1,11 +1,12 @@
-import React from 'react'
-
+import { loadStripe } from "@stripe/stripe-js";
+import React from "react";
+const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 const Payment = () => {
   return (
-    <div>
-      <h1>Tekkkkka...</h1>
-    </div>
-  )
-}
+    <Elements stripe={stripePromise}>
+     
+    </Elements>
+  );
+};
 
-export default Payment
+export default Payment;
