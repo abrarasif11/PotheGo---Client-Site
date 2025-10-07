@@ -4,9 +4,11 @@ import { FaEye, FaTrashAlt, FaMoneyBillWave } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router-dom";
 
 const MyParcel = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -46,25 +48,10 @@ const MyParcel = () => {
     });
   };
 
-  
   const handlePay = (parcel) => {
-    swalWithCustomStyle
-      .fire({
-        title: "Confirm Payment",
-        text: `Pay ৳${parcel.price} for ${parcel.parcelName}?`,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Pay Now",
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          swalWithCustomStyle.fire(
-            "Payment Successful!",
-            "Status updated to Paid.",
-            "success"
-          );
-        }
-      });
+    const id = parcel._id;
+    console.log("Pay Parcel ID:", id);
+    navigate(`/dashboard/payment/${id}`);
   };
 
   const handleDelete = (id) => {
