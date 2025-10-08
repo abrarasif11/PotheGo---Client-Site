@@ -1,6 +1,12 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaEye, FaTrashAlt, FaMoneyBillWave } from "react-icons/fa";
+import {
+  FaEye,
+  FaTrashAlt,
+  FaMoneyBillWave,
+  FaClock,
+  FaHashtag,
+} from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -23,13 +29,11 @@ const MyParcel = () => {
     },
   });
 
-  // SweetAlert2 custom style
   const swalWithCustomStyle = Swal.mixin({
     confirmButtonColor: "#FA2A3B",
     cancelButtonColor: "#6b7280",
   });
 
-  // View Details
   const handleView = (parcel) => {
     swalWithCustomStyle.fire({
       title: `<b>${parcel.parcelName}</b>`,
@@ -49,9 +53,7 @@ const MyParcel = () => {
   };
 
   const handlePay = (parcel) => {
-    const id = parcel._id;
-    console.log("Pay Parcel ID:", id);
-    navigate(`/dashboard/payment/${id}`);
+    navigate(`/dashboard/payment/${parcel._id}`);
   };
 
   const handleDelete = (id) => {
@@ -67,7 +69,6 @@ const MyParcel = () => {
         if (result.isConfirmed) {
           try {
             const res = await axiosSecure.delete(`/parcels/${id}`);
-
             if (res.status === 200 || res.data?.deletedCount > 0) {
               await swalWithCustomStyle.fire(
                 "Deleted!",
@@ -107,8 +108,9 @@ const MyParcel = () => {
         My Parcels
       </h2>
 
-      <div className="overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-200">
-        <table className="table w-full text-sm sm:text-base">
+      {/* 🖥 Desktop & Tablet Table */}
+      <div className="overflow-x-auto hidden md:block">
+        <table className="table w-full min-w-[600px] text-sm sm:text-base">
           <thead className="bg-[#FA2A3B]/10 text-gray-700 uppercase text-xs sm:text-sm">
             <tr>
               <th>#</th>
@@ -121,7 +123,6 @@ const MyParcel = () => {
               <th className="text-center">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {parcels.length === 0 ? (
               <tr>
@@ -136,7 +137,7 @@ const MyParcel = () => {
                   className="hover:bg-[#FA2A3B]/5 transition duration-150"
                 >
                   <td className="font-medium text-gray-700">{index + 1}</td>
-                  <td className="font-semibold break-words">
+                  <td className="font-semibold break-words max-w-[120px] sm:max-w-full">
                     {parcel.parcelName}
                   </td>
                   <td>
@@ -164,19 +165,18 @@ const MyParcel = () => {
                   <td className="hidden md:table-cell text-gray-500 text-xs">
                     {new Date(parcel.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="flex items-center justify-center gap-2 sm:gap-3">
+                  <td className="flex flex-wrap justify-center gap-2 sm:gap-3">
                     <button
                       onClick={() => handleView(parcel)}
-                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
                     >
                       <FaEye />
                     </button>
 
-                    {/* Only show Pay button if status is not Paid */}
                     {parcel.status !== "Paid" && (
                       <button
                         onClick={() => handlePay(parcel)}
-                        className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                        className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
                       >
                         <FaMoneyBillWave />
                       </button>
@@ -184,7 +184,7 @@ const MyParcel = () => {
 
                     <button
                       onClick={() => handleDelete(parcel._id)}
-                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
                     >
                       <FaTrashAlt />
                     </button>
@@ -194,6 +194,94 @@ const MyParcel = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* 📱 Mobile View - Card Style */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {parcels.length === 0 ? (
+          <div className="text-center py-6 text-gray-500">
+            No parcels found.
+          </div>
+        ) : (
+          parcels.map((parcel, index) => (
+            <div
+              key={parcel._id}
+              className="bg-white border border-gray-200 rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-200"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-[#FA2A3B]">
+                  #{index + 1}
+                </span>
+                <span className="text-sm text-gray-500">
+                  <FaClock className="inline text-[#EAB308] mr-1" />
+                  {new Date(parcel.createdAt).toLocaleDateString("en-BD", {
+                    dateStyle: "medium",
+                  })}
+                </span>
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Parcel Name:
+                  </span>{" "}
+                  <span className="text-[#FA2A3B]">{parcel.parcelName}</span>
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Type:</span>{" "}
+                  <span className="text-gray-800">{parcel.parcelType}</span>
+                </p>
+                <p className="break-all">
+                  <span className="font-medium text-gray-600">
+                    Tracking ID:
+                  </span>{" "}
+                  <span className="text-gray-700 flex items-center gap-1 font-mono">
+                    <FaHashtag className="text-[#E02032]" />
+                    {parcel.trackingId}
+                  </span>
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Price:</span>{" "}
+                  <span className="text-[#22C55E] font-semibold">
+                    {parcel.price}৳
+                  </span>
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Status:</span>{" "}
+                  <span
+                    className={`text-white px-2 py-1 rounded ${
+                      parcel.status === "Paid" ? "bg-green-500" : "bg-[#FA2A3B]"
+                    }`}
+                  >
+                    {parcel.status}
+                  </span>
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => handleView(parcel)}
+                    className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                  >
+                    <FaEye /> View
+                  </button>
+                  {parcel.status !== "Paid" && (
+                    <button
+                      onClick={() => handlePay(parcel)}
+                      className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                    >
+                      <FaMoneyBillWave /> Pay
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDelete(parcel._id)}
+                    className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                  >
+                    <FaTrashAlt /> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
