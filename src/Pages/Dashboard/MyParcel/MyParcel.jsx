@@ -171,12 +171,17 @@ const MyParcel = () => {
                     >
                       <FaEye />
                     </button>
-                    <button
-                      onClick={() => handlePay(parcel)}
-                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
-                    >
-                      <FaMoneyBillWave />
-                    </button>
+
+                    {/* Only show Pay button if status is not Paid */}
+                    {parcel.status !== "Paid" && (
+                      <button
+                        onClick={() => handlePay(parcel)}
+                        className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"
+                      >
+                        <FaMoneyBillWave />
+                      </button>
+                    )}
+
                     <button
                       onClick={() => handleDelete(parcel._id)}
                       className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532]"

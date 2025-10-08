@@ -1,10 +1,11 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const PaymentForm = () => {
   const { id } = useParams();
@@ -13,6 +14,7 @@ const PaymentForm = () => {
   const [error, setError] = useState("");
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { isPending, data: parcelInfo = {} } = useQuery({
     queryKey: ["parcels", id],
@@ -81,7 +83,7 @@ const PaymentForm = () => {
           console.log(result);
 
           // Create Payment History //
-          const paymentRes = await axiosSecure.post("/payments", {
+          const paymentRes = await axiosSecure.post("payments", {
             parcelId: id,
             email: user?.email,
             amount,
@@ -91,6 +93,15 @@ const PaymentForm = () => {
 
           if (paymentRes.data.insertedId) {
             console.log("Payment Successful");
+            Swal.fire({
+              title: "Payment Successful!",
+              text: `Transaction ID: ${result.paymentIntent.id}`,
+              icon: "success",
+              confirmButtonColor: "#FA2A3B",
+              confirmButtonText: "Go to My Parcels",
+            }).then(() => {
+              navigate("/dashboard/myParcels");
+            });
           }
         }
       }
