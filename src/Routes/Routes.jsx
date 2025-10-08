@@ -11,6 +11,7 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import MyParcel from "../Pages/Dashboard/MyParcel/MyParcel";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
+import TrackParcel from "../Pages/Dashboard/TrackParcel/TrackParcel";
 
 export const router = createBrowserRouter([
   {
@@ -72,7 +73,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "paymentHistory",
-        element: <PaymentHistory />,
+        Component: PaymentHistory,
+      },
+      {
+        path: "track",
+        Component: TrackParcel,
       },
     ],
   },

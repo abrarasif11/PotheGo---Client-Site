@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { FaBoxOpen } from "react-icons/fa";
+import { FaBoxOpen, FaRoute } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
 const DashboardLayout = () => {
   //   const { role, roleLoading } = useUserRole();
@@ -81,6 +81,19 @@ const DashboardLayout = () => {
             >
               <FaCreditCard className="w-5 h-5" />
               My Payment History
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/dashboard/track"
+              className={({ isActive }) =>
+                `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-5 gap-2 ${
+                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                }`
+              }
+            >
+              <FaRoute className="w-5 h-5" />
+              Track Parcel
             </NavLink>
           </li>
         </ul>
