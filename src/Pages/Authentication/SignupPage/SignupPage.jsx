@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Loader from "../../../Shared/Loader/Loader";
 import { updateProfile } from "firebase/auth";
 import useAxios from "../../../hooks/useAxios";
+import SocialLogin from "../../../Shared/SocialLogin/SocialLogin";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -17,16 +18,7 @@ const SignUpPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signInWithGoogle, createUser } = useAuth();
-  const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then((res) => {
-        console.log(res.user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const { createUser } = useAuth();
 
   const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
@@ -276,21 +268,10 @@ const SignUpPage = () => {
             </div>
 
             {/* Google Login */}
-            <button
-              onClick={handleGoogleSignIn}
-              type="button"
-              className="w-full flex items-center justify-center gap-3 border rounded-md py-3 bg-gray-100 hover:bg-gray-200 transition"
-            >
-              <img
-                src="https://www.svgrepo.com/show/355037/google.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              <span className="text-gray-700 font-medium">
-                Login with Google
-              </span>
-            </button>
-            <p className="text-sm text-center text-gray-600">
+
+            <SocialLogin />
+
+            <p className="text-sm text-center ">
               <Link
                 to="/beArider"
                 className="text-white bg-[#FA2A3B] hover:bg-[#E02032] btn font-medium"
