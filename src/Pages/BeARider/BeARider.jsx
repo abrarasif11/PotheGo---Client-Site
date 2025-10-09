@@ -18,7 +18,7 @@ const BeARider = () => {
     register,
     handleSubmit,
     watch,
-    // reset,
+    reset,
     setValue,
     formState: { errors },
   } = useForm();
@@ -75,15 +75,15 @@ const BeARider = () => {
         icon: "success",
         confirmButtonText: "OK",
       });
-      // reset({
-      //   name: user?.displayName || "",
-      //   email: user?.email || "",
-      //   age: "",
-      //   nid: "",
-      //   contact: "",
-      //   region: "",
-      //   warehouse: "",
-      // });
+      reset({
+        name: user?.displayName || "",
+        email: user?.email || "",
+        age: "",
+        nid: "",
+        contact: "",
+        region: "",
+        warehouse: "",
+      });
     } catch (error) {
       console.error("Error submitting form:", error);
       Swal.fire({
