@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import riderImg from "../../assets/banner/-1.png";
 import { useLoaderData } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const BeARider = () => {
-  const serviceCenter = useLoaderData(); // [{ region: "Dhaka", district: "Mirpur" }, ...]
+  const serviceCenter = useLoaderData(); 
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const axiosSecure = useAxiosSecure();
+
+  const { user } = useAuth();
 
   const {
     register,
     handleSubmit,
     watch,
-    reset,
+    // reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -28,6 +35,15 @@ const BeARider = () => {
     }
   }, [serviceCenter]);
 
+  useEffect(() => {
+    if (user?.email) {
+      setValue("email", user.email);
+    }
+    if (user?.displayName) {
+      setValue("name", user.displayName);
+    }
+  }, [user, setValue]);
+
   // Update districts when region changes
   useEffect(() => {
     if (selectedRegion) {
@@ -40,9 +56,43 @@ const BeARider = () => {
     }
   }, [selectedRegion, serviceCenter]);
 
-  const onSubmit = (data) => {
-    console.log("Rider Application:", data);
-    reset();
+  const onSubmit = async (data) => {
+    try {
+      const res = await axiosSecure.post("riders", data);
+      console.log("MongoDB Response:", res.data.insertedId);
+
+      Swal.fire({
+        title: "Application Submitted!",
+        html: `
+          <strong>Name:</strong> ${data.name} <br/>
+          <strong>Age:</strong> ${data.age} <br/>
+          <strong>Email:</strong> ${data.email} <br/>
+          <strong>Region:</strong> ${data.region} <br/>
+          <strong>NID:</strong> ${data.nid} <br/>
+          <strong>Contact:</strong> ${data.contact} <br/>
+          <strong>Warehouse:</strong> ${data.warehouse}
+        `,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      // reset({
+      //   name: user?.displayName || "",
+      //   email: user?.email || "",
+      //   age: "",
+      //   nid: "",
+      //   contact: "",
+      //   region: "",
+      //   warehouse: "",
+      // });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      Swal.fire({
+        title: "Submission Failed",
+        text: "Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   return (
@@ -82,9 +132,7 @@ const BeARider = () => {
                   {...register("name", { required: "Name is required" })}
                   placeholder="Your Name"
                   className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.name
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.name ? "border-red-500 " : "border-gray-300 "
                   }`}
                 />
                 {errors.name && (
@@ -107,9 +155,7 @@ const BeARider = () => {
                   })}
                   placeholder="Your age"
                   className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.age
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.age ? "border-red-500 " : "border-gray-300 "
                   }`}
                 />
                 {errors.age && (
@@ -129,6 +175,7 @@ const BeARider = () => {
                 </label>
                 <input
                   type="email"
+                  readOnly={!!user?.email}
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -138,9 +185,7 @@ const BeARider = () => {
                   })}
                   placeholder="Your Email"
                   className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.email
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.email ? "border-red-500 " : "border-gray-300 "
                   }`}
                 />
                 {errors.email && (
@@ -158,9 +203,7 @@ const BeARider = () => {
                 <select
                   {...register("region", { required: "Region is required" })}
                   className={`w-full border rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 ${
-                    errors.region
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.region ? "border-red-500 " : "border-gray-300 "
                   }`}
                 >
                   <option value="">Select your region</option>
@@ -190,9 +233,7 @@ const BeARider = () => {
                   {...register("nid", { required: "NID is required" })}
                   placeholder="NID"
                   className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.nid
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.nid ? "border-red-500 " : "border-gray-300 "
                   }`}
                 />
                 {errors.nid && (
@@ -212,9 +253,7 @@ const BeARider = () => {
                   {...register("contact", { required: "Contact is required" })}
                   placeholder="Contact"
                   className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.contact
-                      ? "border-red-500 "
-                      : "border-gray-300 "
+                    errors.contact ? "border-red-500 " : "border-gray-300 "
                   }`}
                 />
                 {errors.contact && (
@@ -236,9 +275,7 @@ const BeARider = () => {
                 })}
                 disabled={!districts.length}
                 className={`w-full border rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 ${
-                  errors.warehouse
-                    ? "border-red-500 "
-                    : "border-gray-300 "
+                  errors.warehouse ? "border-red-500 " : "border-gray-300 "
                 }`}
               >
                 <option value="">
