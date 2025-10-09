@@ -96,7 +96,7 @@ const DashboardLayout = () => {
               Track Parcel
             </NavLink>
           </li>
-          {/* <li>
+          <li>
             <NavLink
               to="/dashboard/activeRiders"
               className={({ isActive }) =>
@@ -108,7 +108,7 @@ const DashboardLayout = () => {
               <FaUserCheck className="w-5 h-5" />
               Active Riders
             </NavLink>
-          </li> */}
+          </li>
           <li>
             <NavLink
               to="/dashboard/pendingRiders"

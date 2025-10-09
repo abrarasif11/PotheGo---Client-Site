@@ -1,47 +1,37 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { FaEye, FaCheck, FaTimes } from "react-icons/fa";
+import { FaTimes, FaUserSlash, FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import Loader from "../../../Shared/Loader/Loader";
 
-const PendingRiders = () => {
+const ActiveRiders = () => {
   const axiosSecure = useAxiosSecure();
   const [selectedRider, setSelectedRider] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const {
-    isLoading,
-    data: riders = [],
-    refetch,
-  } = useQuery({
-    queryKey: ["pendingRiders"],
+  const { data: riders = [], refetch } = useQuery({
+    queryKey: ["activeRiders", searchTerm],
     queryFn: async () => {
-      const res = await axiosSecure.get("riders/pending");
+      const res = await axiosSecure.get(
+        `riders/active${searchTerm ? `?search=${searchTerm}` : ""}`
+      );
       return res.data;
     },
   });
 
-  if (isLoading) return <Loader />;
-
-  const handleStatusUpdate = async (riderId, status) => {
-    const actionText = status === "Active" ? "Approve" : "Reject";
-
+  const handleDeactivate = async (riderId) => {
     const result = await Swal.fire({
-      title: `Are you sure you want to ${actionText} this rider?`,
+      title: "Are you sure you want to deactivate this rider?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: actionText,
+      confirmButtonText: "Deactivate",
       cancelButtonText: "Cancel",
     });
 
     if (result.isConfirmed) {
       try {
-        await axiosSecure.patch(`riders/${riderId}`, { status });
-        Swal.fire(
-          "Success!",
-          `Rider ${actionText.toLowerCase()}ed successfully.`,
-          "success"
-        );
+        await axiosSecure.patch(`riders/${riderId}`, { status: "Inactive" });
+        Swal.fire("Success!", "Rider deactivated successfully.", "success");
         refetch();
         setSelectedRider(null);
       } catch (err) {
@@ -55,13 +45,27 @@ const PendingRiders = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-gradient-to-br from-white to-[#fff5f5]">
-      <h2 className="text-3xl font-bold text-center mb-8 text-[#E02032]">
-        Pending Riders
+    <div className="p-6 bg-gradient-to-br from-white to-[#fff5f5] min-h-screen">
+      <h2 className="text-3xl font-bold text-center mb-6 text-[#E02032]">
+        Active Riders
       </h2>
 
+      {/* Search */}
+      <div className="mb-4 relative w-full max-w-sm mx-auto md:mx-0">
+        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search by name..."
+          className="input input-bordered pl-10 w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {riders.length === 0 ? (
-        <p className="text-center text-gray-500">No pending riders found.</p>
+        <p className="text-center text-gray-500 mt-6">
+          No active riders found.
+        </p>
       ) : (
         <>
           {/* Desktop Table */}
@@ -74,20 +78,21 @@ const PendingRiders = () => {
                   <th className="px-4 py-3 text-left">Email</th>
                   <th className="px-4 py-3 text-left">Contact</th>
                   <th className="px-4 py-3 text-left">Region</th>
-                  <th className="px-4 py-3 text-left">District</th>
-                  <th className="px-4 py-3 text-left">Applied At</th>
+                  <th className="px-4 py-3 text-left">Warehouse</th>
+                  <th className="px-4 py-3 text-left">Created At</th>
+                  <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {riders.map((rider, idx) => (
+                {riders.map((rider, index) => (
                   <tr
                     key={rider._id}
                     className={`transition-all duration-200 hover:bg-[#fff2f3] ${
-                      idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
                     }`}
                   >
-                    <td className="px-4 py-3">{idx + 1}</td>
+                    <td className="px-4 py-3">{index + 1}</td>
                     <td className="px-4 py-3 font-semibold text-[#FA2A3B]">
                       {rider.name}
                     </td>
@@ -107,29 +112,16 @@ const PendingRiders = () => {
                           })
                         : "N/A"}
                     </td>
-                    <td className="px-4 py-3 flex justify-center gap-2">
+                    <td className="px-4 py-3 capitalize">
+                      {rider.status || "Active"}
+                    </td>
+                    <td className="px-4 py-3 text-center flex justify-center gap-2">
                       <button
-                        onClick={() => setSelectedRider(rider)}
-                        className="text-white bg-[#3B82F6] p-2 rounded-lg shadow-lg hover:scale-110 transition-transform"
-                        title="View"
+                        onClick={() => handleDeactivate(rider._id)}
+                        className="bg-red-500 text-white p-2 rounded-lg shadow-lg hover:scale-110 transition-transform flex items-center justify-center"
+                        title="Deactivate"
                       >
-                        <FaEye />
-                      </button>
-                      <button
-                        onClick={() => handleStatusUpdate(rider._id, "Active")}
-                        className="text-white bg-[#22C55E] p-2 rounded-lg shadow-lg hover:scale-110 transition-transform"
-                        title="Approve"
-                      >
-                        <FaCheck />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleStatusUpdate(rider._id, "Rejected")
-                        }
-                        className="text-white bg-[#EF4444] p-2 rounded-lg shadow-lg hover:scale-110 transition-transform"
-                        title="Reject"
-                      >
-                        <FaTimes />
+                        <FaUserSlash />
                       </button>
                     </td>
                   </tr>
@@ -139,22 +131,24 @@ const PendingRiders = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="grid grid-cols-1 gap-4 md:hidden">
+          <div className="grid grid-cols-1 gap-4 md:hidden mt-4">
             {riders.map((rider) => (
-              <div
-                key={rider._id}
-                className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all"
-              >
+              <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-lg font-semibold text-[#FA2A3B]">
                     {rider.name}
                   </h3>
-                  <span className="text-xs text-gray-500">{rider.region}</span>
+                  <span className="text-xs text-gray-500 capitalize">
+                    {rider.status || "Active"}
+                  </span>
                 </div>
                 <p className="text-sm text-gray-600">{rider.email}</p>
                 <p className="text-sm text-gray-600">{rider.contact || "-"}</p>
                 <p className="text-xs text-gray-500 mt-1">
-                  Applied:{" "}
+                  Warehouse: {rider.warehouse} | Region: {rider.region}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Created:{" "}
                   {rider.createdAt
                     ? new Date(rider.createdAt).toLocaleString("en-GB", {
                         day: "numeric",
@@ -166,24 +160,13 @@ const PendingRiders = () => {
                       })
                     : "N/A"}
                 </p>
-                <div className="flex justify-between mt-3 gap-2">
+                <div className="flex justify-end mt-3">
                   <button
-                    onClick={() => setSelectedRider(rider)}
-                    className="bg-[#3B82F6] text-white p-2 rounded-lg shadow-md flex-1 hover:scale-105 transition-transform flex justify-center"
+                    onClick={() => handleDeactivate(rider._id)}
+                    className="bg-red-500 text-white p-2 rounded-lg shadow-md hover:scale-105 transition-transform flex items-center justify-center"
                   >
-                    <FaEye />
-                  </button>
-                  <button
-                    onClick={() => handleStatusUpdate(rider._id, "Active")}
-                    className="bg-[#22C55E] text-white p-2 rounded-lg shadow-md flex-1 hover:scale-105 transition-transform flex justify-center"
-                  >
-                    <FaCheck />
-                  </button>
-                  <button
-                    onClick={() => handleStatusUpdate(rider._id, "Rejected")}
-                    className="bg-[#EF4444] text-white p-2 rounded-lg shadow-md flex-1 hover:scale-105 transition-transform flex justify-center"
-                  >
-                    <FaTimes />
+                    <FaUserSlash />
+                    <span className="pl-1 hidden sm:inline">Deactivate</span>
                   </button>
                 </div>
               </div>
@@ -222,7 +205,10 @@ const PendingRiders = () => {
                 <strong>Warehouse:</strong> {selectedRider.warehouse}
               </p>
               <p>
-                <strong>Applied At:</strong>{" "}
+                <strong>Status:</strong> {selectedRider.status}
+              </p>
+              <p>
+                <strong>Created At:</strong>{" "}
                 {selectedRider.createdAt
                   ? new Date(selectedRider.createdAt).toLocaleString("en-GB", {
                       day: "numeric",
@@ -235,22 +221,6 @@ const PendingRiders = () => {
                   : "N/A"}
               </p>
             </div>
-            <div className="mt-6 flex justify-between gap-2">
-              <button
-                onClick={() => handleStatusUpdate(selectedRider._id, "Active")}
-                className="flex-1 bg-[#22C55E] text-white p-3 rounded-xl flex justify-center items-center hover:scale-105 transition-transform"
-              >
-                <FaCheck className="mr-2" /> Approve
-              </button>
-              <button
-                onClick={() =>
-                  handleStatusUpdate(selectedRider._id, "Rejected")
-                }
-                className="flex-1 bg-[#EF4444] text-white p-3 rounded-xl flex justify-center items-center hover:scale-105 transition-transform"
-              >
-                <FaTimes className="mr-2" /> Reject
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -258,4 +228,4 @@ const PendingRiders = () => {
   );
 };
 
-export default PendingRiders;
+export default ActiveRiders;
