@@ -1,24 +1,23 @@
 import Lottie from "lottie-react";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginLottie from "../../../assets/assests/Delivery Service-Delivery man.json";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import Loader from "../../../Shared/Loader/Loader";
+import { updateProfile } from "firebase/auth";
+import useAxios from "../../../hooks/useAxios";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { signInWithGoogle, createUser } = useAuth();
-  const onSubmit = (data) => {
-    console.log(data);
-    createUser(data.email, data.password).then((result) => {
-      console.log(result.user);
-    });
-  };
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((res) => {
@@ -28,8 +27,90 @@ const SignUpPage = () => {
         console.log(err);
       });
   };
+
+  const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const onSubmit = async (data) => {
+    try {
+      setUploading(true);
+      let imageUrl = "";
+
+      // Upload image to ImgBB
+      if (data.image && data.image[0]) {
+        const file = data.image[0];
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch(
+          `https://api.imgbb.com/1/upload?key=${
+            import.meta.env.VITE_Image_Upload_Key
+          }`,
+          { method: "POST", body: formData }
+        );
+
+        const imgData = await res.json();
+        if (imgData.success) {
+          imageUrl = imgData.data.url;
+          console.log("Image uploaded to ImgBB:", imageUrl);
+        } else {
+          console.error("ImgBB Upload Failed:", imgData);
+        }
+      }
+
+      // Create user in Firebase
+      const userRes = await createUser(data.email, data.password);
+      console.log("Firebase user created:", userRes.user);
+
+      // Update user info on DB
+      const userInfo = {
+        email: data.email,
+        role: "user",
+        createdAt: new Date().toISOString(),
+        last_log_in: new Date().toISOString(),
+      };
+
+      const userR = await axiosInstance.post("users", userInfo);
+      console.log(userR.data);
+
+      // Update Firebase profile
+      await updateProfile(userRes.user, {
+        displayName: data.name,
+        photoURL: imageUrl || null,
+      });
+
+      setUploading(false);
+
+      Swal.fire({
+        title: "Registration Successful!",
+        html: `
+          <p><strong>Name:</strong> ${userRes.user.displayName}</p>
+          <p><strong>Email:</strong> ${userRes.user.email}</p>
+          ${
+            imageUrl
+              ? `<p><strong>Image URL:</strong> <a href="${imageUrl}" target="_blank">${imageUrl}</a></p>
+                 <img src="${imageUrl}" alt="Profile" class="w-20 h-20 rounded-full mt-2"/>`
+              : ""
+          }
+        `,
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/");
+      });
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setUploading(false);
+      Swal.fire({
+        title: "Error!",
+        text: "Something went wrong during registration.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
   return (
     <div className="mt-20 mb-20 flex items-center justify-center  px-6">
@@ -173,9 +254,10 @@ const SignUpPage = () => {
             {/* Login Button */}
             <button
               type="submit"
+              disabled={uploading}
               className="w-full py-3 bg-[#FA2A3B] text-white font-medium rounded-md hover:bg-[#E02032] transition"
             >
-              Sign Up
+              {uploading ? <Loader></Loader> : "Sign Up"}
             </button>
 
             {/* Register */}
