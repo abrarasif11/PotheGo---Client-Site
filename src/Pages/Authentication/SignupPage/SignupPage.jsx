@@ -29,6 +29,7 @@ const SignUpPage = () => {
       });
   };
   const [showPassword, setShowPassword] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   return (
     <div className="mt-20 mb-20 flex items-center justify-center  px-6">
@@ -46,6 +47,41 @@ const SignUpPage = () => {
                 Welcome Back
               </h1>
               <p className="text-gray-600">Login with PotheGo</p>
+            </div>
+
+            {/* Preview Image */}
+            {preview && (
+              <div className="mt-3">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-20 h-20 object-cover rounded-full border"
+                />
+              </div>
+            )}
+
+            {/* Profile Image */}
+            <div>
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Profile Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                {...register("image")}
+                id="image"
+                onChange={(e) =>
+                  setPreview(
+                    e.target.files[0]
+                      ? URL.createObjectURL(e.target.files[0])
+                      : null
+                  )
+                }
+                className="w-full mt-1 px-3 py-2 border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#CAEB66]"
+              />
             </div>
 
             {/* Name */}
