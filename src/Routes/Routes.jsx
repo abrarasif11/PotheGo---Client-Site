@@ -39,9 +39,8 @@ export const router = createBrowserRouter([
       {
         path: "/beArider",
         element: (
-          <PrivateRoute>
+          
             <BeARider />
-          </PrivateRoute>
         ),
         loader: () => fetch("ServiceCenter.json"),
       },
