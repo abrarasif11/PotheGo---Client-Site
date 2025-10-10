@@ -14,6 +14,7 @@ import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 import TrackParcel from "../Pages/Dashboard/TrackParcel/TrackParcel";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
 import ActiveRiders from "../Pages/Dashboard/ActiveRiders/ActiveRiders";
+import ManageAdmins from "../Pages/Dashboard/ManageAdmins/ManageAdmins";
 
 export const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ export const router = createBrowserRouter([
       {
         path: "activeRiders",
         Component: ActiveRiders,
+      },
+      {
+        path: "makeAdmin",
+        Component: ManageAdmins,
       },
     ],
   },

@@ -122,6 +122,19 @@ const DashboardLayout = () => {
               Pending Riders
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/dashboard/makeAdmin"
+              className={({ isActive }) =>
+                `flex items-center gap-2 ${
+                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                }`
+              }
+            >
+              <FaUserShield className="w-5 h-5" />
+              Manage Admins
+            </NavLink>
+          </li>
         </ul>
       </div>
     </div>
