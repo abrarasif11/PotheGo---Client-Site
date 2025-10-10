@@ -1,6 +1,12 @@
 import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { FaBoxOpen, FaRoute, FaUserCheck, FaUserClock } from "react-icons/fa";
+import {
+  FaBoxOpen,
+  FaRoute,
+  FaUserCheck,
+  FaUserClock,
+  FaUserShield,
+} from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
 const DashboardLayout = () => {
   //   const { role, roleLoading } = useUserRole();
@@ -123,10 +129,11 @@ const DashboardLayout = () => {
             </NavLink>
           </li>
           <li>
+            {/* Admin Routes */}
             <NavLink
               to="/dashboard/makeAdmin"
               className={({ isActive }) =>
-                `flex items-center gap-2 ${
+                `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
                   isActive ? "bg-base-300 rounded-lg font-semibold" : ""
                 }`
               }
