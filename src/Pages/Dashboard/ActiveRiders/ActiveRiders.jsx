@@ -112,7 +112,7 @@ const ActiveRiders = () => {
                           })
                         : "N/A"}
                     </td>
-                    <td className="px-4 py-3 capitalize">
+                    <td className="px-4 py-3 capitalize ">
                       {rider.status || "Active"}
                     </td>
                     <td className="px-4 py-3 text-center flex justify-center gap-2">

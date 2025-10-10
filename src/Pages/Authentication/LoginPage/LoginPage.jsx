@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import loginLottie from "../../../assets/assests/Delivery Service-Delivery man.json";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
+import SocialLogin from "../../../Shared/SocialLogin/SocialLogin";
 
 const LoginPage = () => {
   const {
@@ -13,7 +14,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm();
 
-  const { signInWithGoogle, signIn } = useAuth();
+  const { signIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
@@ -28,15 +29,6 @@ const LoginPage = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then((res) => {
-        console.log(res.user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   return (
     <div className="mt-20 mb-20 flex items-center justify-center  px-6">
       {/* Wrapper Grid */}
@@ -148,20 +140,7 @@ const LoginPage = () => {
             </div>
 
             {/* Google Login */}
-            <button
-              onClick={handleGoogleSignIn}
-              type="button"
-              className="w-full flex items-center justify-center gap-3 border rounded-md py-3 bg-gray-100 hover:bg-gray-200 transition"
-            >
-              <img
-                src="https://www.svgrepo.com/show/355037/google.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              <span className="text-gray-700 font-medium">
-                Login with Google
-              </span>
-            </button>
+            <SocialLogin />
           </form>
         </div>
 

@@ -7,7 +7,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
 const BeARider = () => {
-  const serviceCenter = useLoaderData(); 
+  const serviceCenter = useLoaderData();
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const axiosSecure = useAxiosSecure();
