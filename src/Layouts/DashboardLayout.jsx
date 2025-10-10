@@ -6,14 +6,15 @@ import {
   FaUserCheck,
   FaUserClock,
   FaUsersCog,
-  FaUserShield,
 } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
+import useUserRole from "../hooks/useUserRole";
+import Loader from "../Shared/Loader/Loader";
 const DashboardLayout = () => {
-  //   const { role, roleLoading } = useUserRole();
-  //   if (roleLoading) return <Loader />;
-  //   console.log("Current user role:", role);
-  //   console.log(role);
+  const { role, roleLoading } = useUserRole();
+  if (roleLoading) return <Loader />;
+  console.log("Current user role:", role);
+  console.log(role);
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -103,46 +104,50 @@ const DashboardLayout = () => {
               Track Parcel
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/dashboard/activeRiders"
-              className={({ isActive }) =>
-                `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaUserCheck className="w-5 h-5" />
-              Active Riders
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/pendingRiders"
-              className={({ isActive }) =>
-                `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaUserClock className="w-5 h-5" />
-              Pending Riders
-            </NavLink>
-          </li>
-          <li>
-            {/* Admin Routes */}
-            <NavLink
-              to="/dashboard/makeAdmin"
-              className={({ isActive }) =>
-                `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaUsersCog className="w-5 h-5" />
-              Manage Admins
-            </NavLink>
-          </li>
+          {!roleLoading && role === "admin" && (
+            <>
+              <li>
+                <NavLink
+                  to="/dashboard/activeRiders"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaUserCheck className="w-5 h-5" />
+                  Active Riders
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/pendingRiders"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaUserClock className="w-5 h-5" />
+                  Pending Riders
+                </NavLink>
+              </li>
+              <li>
+                {/* Admin Routes */}
+                <NavLink
+                  to="/dashboard/makeAdmin"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaUsersCog className="w-5 h-5" />
+                  Manage Admins
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>
