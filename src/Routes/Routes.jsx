@@ -15,6 +15,8 @@ import TrackParcel from "../Pages/Dashboard/TrackParcel/TrackParcel";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
 import ActiveRiders from "../Pages/Dashboard/ActiveRiders/ActiveRiders";
 import ManageAdmins from "../Pages/Dashboard/ManageAdmins/ManageAdmins";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import AdminRoutes from "./AdminRoutes/AdminRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/error",
+        element: <ErrorPage />,
       },
       {
         path: "/coverage",
@@ -92,7 +98,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "makeAdmin",
-        Component: ManageAdmins,
+        element: (
+          <AdminRoutes>
+            <ManageAdmins />
+          </AdminRoutes>
+        ),
       },
     ],
   },
