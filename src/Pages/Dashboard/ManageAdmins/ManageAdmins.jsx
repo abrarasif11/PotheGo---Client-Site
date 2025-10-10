@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { FaSearch, FaUserShield, FaUserSlash } from "react-icons/fa";
+import {
+  FaSearch,
+  FaUserShield,
+  FaUserSlash,
+  FaUsersCog,
+  FaEnvelope,
+} from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ManageAdmins = () => {
@@ -25,23 +31,15 @@ const ManageAdmins = () => {
     retry: false,
   });
 
-  // Mutation: update user role with optimistic update
   const updateRoleMutation = useMutation({
     mutationFn: ({ id, role }) =>
       axiosSecure.patch(`users/${id}/role`, { role }),
     onMutate: async ({ id, role }) => {
-      // Cancel any outgoing re fetches for this query
       await queryClient.cancelQueries(["searchUsers", email]);
-
-      // Snapshot previous value
       const previousUsers = queryClient.getQueryData(["searchUsers", email]);
-
-      // update the role locally
       queryClient.setQueryData(["searchUsers", email], (old = []) =>
         old.map((user) => (user._id === id ? { ...user, role } : user))
       );
-
-      // Return context for rollback
       return { previousUsers };
     },
     onError: (err, variables, context) => {
@@ -51,10 +49,9 @@ const ManageAdmins = () => {
       }
     },
     onSuccess: () => {
-      Swal.fire("Success", "User role updated", "success");
+      Swal.fire("Success", "User role updated successfully", "success");
     },
     onSettled: () => {
-      // refetch to sync with server
       queryClient.invalidateQueries(["searchUsers", email]);
     },
   });
@@ -65,85 +62,121 @@ const ManageAdmins = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email.trim()) {
+      Swal.fire("Warning", "Please enter an email to search", "warning");
+      return;
+    }
     refetch();
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Manage Admins</h1>
+    <div className="p-6 sm:p-10 max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 text-[#FA2A3B]">
+          <FaUsersCog className="text-[#E02032]" /> Manage Admins
+        </h1>
+      </div>
 
-      {/* Search Form */}
-      <form onSubmit={handleSearch} className="flex gap-3 mb-6">
+      {/* Search Bar */}
+      <form
+        onSubmit={handleSearch}
+        className="flex flex-col sm:flex-row items-center gap-3 mb-8"
+      >
         <input
           type="text"
-          placeholder="Search users by email"
+          placeholder="Search users by email..."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="input input-bordered w-full"
+          className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#FA2A3B]"
         />
         <button
           type="submit"
-          className="btn text-white bg-[#FA2A3B] hover:bg-[#E02032] flex items-center gap-2"
+          className="w-full sm:w-auto bg-[#FA2A3B] hover:bg-[#E02032] text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all"
         >
           <FaSearch /> Search
         </button>
       </form>
 
-      {isFetching && <p className="text-gray-500">Searching...</p>}
-      {isError && <p className="text-red-500">No users found.</p>}
+      {/* Loading / Error States */}
+      {isFetching && (
+        <p className="text-center text-gray-500 font-medium animate-pulse">
+          Searching users...
+        </p>
+      )}
+      {isError && (
+        <p className="text-center text-red-500 font-medium">
+          No users found or something went wrong.
+        </p>
+      )}
 
       {/* Users List */}
-      {users.length > 0 && (
-        <div className="space-y-4">
-          {users.map((user) => (
-            <div
-              key={user._id}
-              className="bg-white shadow-md rounded-xl p-5 flex justify-between items-center"
-            >
-              <div>
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-                <p>
-                  <strong>Created At:</strong>{" "}
-                  {new Date(user.createdAt).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Role:</strong>{" "}
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${
-                      user.role === "admin"
-                        ? "text-white bg-[#FA2A3B] hover:bg-[#E02032]"
-                        : "bg-gray-200 text-gray-700"
-                    }`}
-                  >
-                    {user.role}
-                  </span>
-                </p>
-              </div>
+      <div className="space-y-5">
+        {users.length > 0
+          ? users.map((user) => (
+              <div
+                key={user._id}
+                className="bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4"
+              >
+                <div className="flex-1">
+                  <p className="text-sm sm:text-base flex items-center gap-2 text-gray-700">
+                    <FaEnvelope className="text-[#FA2A3B]" />
+                    <span className="font-semibold">Email:</span> {user.email}
+                  </p>
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
+                    <span className="font-semibold">Created At:</span>{" "}
+                    {user.createdAt
+                      ? new Date(user.createdAt).toLocaleString("en-GB", {
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })
+                      : "N/A"}
+                  </p>
+                  <p className="text-sm sm:text-base mt-1">
+                    <span className="font-semibold">Role:</span>{" "}
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        user.role === "admin"
+                          ? "bg-[#FA2A3B]/10 text-[#FA2A3B] border border-[#FA2A3B]"
+                          : "bg-gray-100 text-gray-700 border border-gray-300"
+                      }`}
+                    >
+                      {user.role}
+                    </span>
+                  </p>
+                </div>
 
-              <div className="flex gap-2">
-                {user.role !== "admin" ? (
-                  <button
-                    onClick={() => handleRoleChange(user._id, "admin")}
-                    className="btn text-white bg-[#FA2A3B] hover:bg-[#E02032] flex items-center gap-2"
-                  >
-                    <FaUserShield /> Make Admin
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleRoleChange(user._id, "user")}
-                    className="btn bg-red-500 text-white flex items-center gap-2"
-                  >
-                    <FaUserSlash /> Remove Admin
-                  </button>
-                )}
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  {user.role !== "admin" ? (
+                    <button
+                      onClick={() => handleRoleChange(user._id, "admin")}
+                      className="flex-1 sm:flex-none bg-[#FA2A3B] hover:bg-[#E02032] text-white font-semibold py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
+                    >
+                      <FaUserShield /> Make Admin
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleRoleChange(user._id, "user")}
+                      className="flex-1 sm:flex-none bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
+                    >
+                      <FaUserSlash /> Remove Admin
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))
+          : !isFetching &&
+            !isError && (
+              <p className="text-center text-gray-500 italic">
+                No users to display. Try searching by email.
+              </p>
+            )}
+      </div>
     </div>
   );
 };

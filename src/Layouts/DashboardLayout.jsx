@@ -5,6 +5,7 @@ import {
   FaRoute,
   FaUserCheck,
   FaUserClock,
+  FaUsersCog,
   FaUserShield,
 } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
@@ -138,7 +139,7 @@ const DashboardLayout = () => {
                 }`
               }
             >
-              <FaUserShield className="w-5 h-5" />
+              <FaUsersCog className="w-5 h-5" />
               Manage Admins
             </NavLink>
           </li>
