@@ -5,6 +5,7 @@ import {
   FaRoute,
   FaUserCheck,
   FaUserClock,
+  FaUserPlus,
   FaUsersCog,
 } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
@@ -117,6 +118,19 @@ const DashboardLayout = () => {
                 >
                   <FaUserCheck className="w-5 h-5" />
                   Active Riders
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/assignRider"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaUserPlus className="w-5 h-5" />
+                  Assign Rider
                 </NavLink>
               </li>
               <li>
