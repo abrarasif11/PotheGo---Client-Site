@@ -6,10 +6,10 @@ import loginLottie from "../../../assets/assests/Delivery Service-Delivery man.j
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import Loader from "../../../Shared/Loader/Loader";
 import { updateProfile } from "firebase/auth";
 import useAxios from "../../../hooks/useAxios";
 import SocialLogin from "../../../Shared/SocialLogin/SocialLogin";
+import SignupLoader from "../../../Shared/SignUpLoader/SignUpLoader";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -249,7 +249,7 @@ const SignUpPage = () => {
               disabled={uploading}
               className="w-full py-3 bg-[#FA2A3B] text-white font-medium rounded-md hover:bg-[#E02032] transition"
             >
-              {uploading ? <Loader></Loader> : "Sign Up"}
+              {uploading ? <SignupLoader></SignupLoader> : "Sign Up"}
             </button>
 
             {/* Register */}
