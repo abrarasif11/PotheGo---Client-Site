@@ -17,7 +17,7 @@
     "axios": "^1.12.2",
     "daisyui": "^5.1.26",
     "firebase": "^12.3.0",
-    "framer-motion": "^12.23.22",
+    "framer-motion": "^12.23.24",
     "leaflet": "^1.9.4",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",
