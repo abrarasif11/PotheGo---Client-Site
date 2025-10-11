@@ -9,7 +9,6 @@ const AssignRider = () => {
   const [selectedParcel, setSelectedParcel] = useState(null);
   const [selectedRider, setSelectedRider] = useState(null);
 
-  // Fetch parcels
   const {
     data: parcels = [],
     isLoading,
@@ -20,7 +19,6 @@ const AssignRider = () => {
     queryFn: async () => (await axiosSecure.get("/parcels")).data,
   });
 
-  // Fetch available riders
   const {
     data: availableRiders = [],
     refetch: refetchRiders,
@@ -56,10 +54,7 @@ const AssignRider = () => {
     try {
       const res = await axiosSecure.patch(
         `/parcels/${selectedParcel._id}/assign`,
-        {
-          riderEmail,
-          riderName,
-        }
+        { riderEmail, riderName }
       );
 
       const updatedParcel = res.data.parcel;
@@ -96,12 +91,11 @@ const AssignRider = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] animate-pulse">
+      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] ">
         Assign Rider to Parcels
       </h2>
 
-      {/* Desktop Table */}
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-100 backdrop-blur-sm hidden sm:block">
+      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-100 backdrop-blur-sm">
         <table className="w-full border-collapse text-sm sm:text-base">
           <thead>
             <tr className="bg-[#FA2A3B] text-white uppercase tracking-wider">
@@ -172,63 +166,18 @@ const AssignRider = () => {
         </table>
       </div>
 
-      {/* Mobile Cards */}
-      <div className="sm:hidden grid gap-4">
-        {parcels.map((parcel) => (
-          <div
-            key={parcel._id}
-            className="bg-white p-4 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all"
-          >
-            <p className="font-mono font-semibold text-sm mb-1">
-              {parcel.trackingId}
-            </p>
-            <p className="font-semibold text-base mb-1">{parcel.parcelName}</p>
-            <p className="text-sm mb-1">Weight: {parcel.parcelWeight} kg</p>
-            <p className="text-sm mb-1">
-              Sender: {parcel.senderName} ({parcel.senderRegion})
-            </p>
-            <p className="text-sm mb-1">
-              Receiver: {parcel.receiverName} ({parcel.receiverRegion})
-            </p>
-            <p className="text-sm mb-1">
-              Status:{" "}
-              <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-                {parcel.status}
-              </span>
-            </p>
-            <p className="text-sm mb-2">
-              Delivery:{" "}
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  parcel.deliveryStatus === "Delivered"
-                    ? "bg-green-100 text-green-700"
-                    : parcel.deliveryStatus === "In Transit"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
-                {parcel.deliveryStatus}
-              </span>
-            </p>
-            <button
-              onClick={() => handleAssignClick(parcel)}
-              className="w-full bg-[#FA2A3B] text-white py-2 rounded-lg font-semibold hover:bg-[#E02032] hover:scale-105 transition-all"
-            >
-              Assign Rider
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal */}
       {selectedParcel && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-[80vh] overflow-y-auto p-6 animate-fadeIn">
-            <h3 className="text-xl font-bold mb-4 text-[#FA2A3B] text-center">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn px-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md transform animate-scaleIn">
+            <h3 className="text-xl font-bold mb-4 text-center text-[#FA2A3B]">
               Select Rider for Parcel
             </h3>
-            <p className="mb-4 text-gray-600">
-              Parcel: {selectedParcel.parcelName} ({selectedParcel.trackingId})
+            <p className="mb-4 text-gray-600 text-center">
+              Parcel:{" "}
+              <span className="font-semibold text-black">
+                {selectedParcel.parcelName}
+              </span>{" "}
+              ({selectedParcel.trackingId})
             </p>
 
             {ridersLoading ? (
@@ -239,8 +188,10 @@ const AssignRider = () => {
                   availableRiders.map((rider) => (
                     <div
                       key={rider._id}
-                      className={`flex items-center justify-between border p-2 rounded hover:bg-gray-100 cursor-pointer transition-all ${
-                        selectedRider?._id === rider._id ? "bg-[#CAEB66]" : ""
+                      className={`flex items-center justify-between border p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                        selectedRider?._id === rider._id
+                          ? "bg-[#FA2A3B]/10 border-[#FA2A3B]"
+                          : "hover:bg-gray-100"
                       }`}
                       onClick={() => setSelectedRider(rider)}
                     >
@@ -251,14 +202,14 @@ const AssignRider = () => {
                         </p>
                       </div>
                       {selectedRider?._id === rider._id && (
-                        <span className="text-green-600 font-bold">
-                          Selected
+                        <span className="text-[#FA2A3B] font-bold animate-pulse">
+                          ✓
                         </span>
                       )}
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500">
+                  <p className="text-gray-500 text-center">
                     No available riders in this region.
                   </p>
                 )}
@@ -266,32 +217,35 @@ const AssignRider = () => {
             )}
 
             {selectedRider && (
-              <div className="mt-4 p-3 border rounded bg-gray-50">
+              <div className="mt-4 p-3 border rounded-lg bg-gray-50 shadow-inner animate-fadeIn">
                 <p>
-                  <strong>Assigned Rider Email:</strong> {selectedRider.email}
+                  <strong>Email:</strong> {selectedRider.email}
                 </p>
                 <p>
-                  <strong>Assigned Rider Name:</strong> {selectedRider.name}
+                  <strong>Name:</strong> {selectedRider.name}
                 </p>
                 <p>
-                  <strong>Delivery Status:</strong> Rider Assigned
+                  <strong>Status:</strong>{" "}
+                  <span className="text-[#FA2A3B] font-semibold">
+                    Rider Assigned
+                  </span>
                 </p>
               </div>
             )}
 
-            <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={handleCloseModal}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all hover:scale-105"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmAssign}
                 disabled={!selectedRider}
-                className={`px-4 py-2 rounded font-semibold transition ${
+                className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
                   selectedRider
-                    ? "bg-[#FA2A3B] text-white hover:bg-[#E02032]"
+                    ? "bg-[#FA2A3B] text-white hover:bg-[#E02032] hover:scale-105"
                     : "bg-gray-200 cursor-not-allowed"
                 }`}
               >
