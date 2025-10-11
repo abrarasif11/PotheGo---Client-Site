@@ -162,12 +162,12 @@ const MyParcel = () => {
                       {parcel.status}
                     </span>
                   </td>
-                  {/* <td className="hidden md:table-cell text-gray-500 text-xs">
+                  <td className="hidden md:table-cell text-gray-500 text-xs">
                     {new Date(parcel.createdAt).toLocaleString("en-BD", {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })}
-                  </td> */}
+                  </td>
                   <td className="flex flex-wrap justify-center gap-2 sm:gap-3">
                     <button
                       onClick={() => handleView(parcel)}
