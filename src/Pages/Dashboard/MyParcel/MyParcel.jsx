@@ -24,7 +24,7 @@ const MyParcel = () => {
   } = useQuery({
     queryKey: ["my-parcels", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/parcels?email=${user.email}`);
+      const res = await axiosSecure.get(`parcels?email=${user.email}`);
       return res.data;
     },
   });
@@ -162,9 +162,12 @@ const MyParcel = () => {
                       {parcel.status}
                     </span>
                   </td>
-                  <td className="hidden md:table-cell text-gray-500 text-xs">
-                    {new Date(parcel.createdAt).toLocaleDateString()}
-                  </td>
+                  {/* <td className="hidden md:table-cell text-gray-500 text-xs">
+                    {new Date(parcel.createdAt).toLocaleString("en-BD", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </td> */}
                   <td className="flex flex-wrap justify-center gap-2 sm:gap-3">
                     <button
                       onClick={() => handleView(parcel)}
