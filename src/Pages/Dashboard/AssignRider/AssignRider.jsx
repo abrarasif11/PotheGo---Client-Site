@@ -87,12 +87,12 @@ const AssignRider = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] animate-pulse">
+      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] mt-5">
         Assign Rider to Parcels
       </h2>
 
       {/* Desktop Table */}
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-100 backdrop-blur-sm hidden sm:block">
+      <div className="overflow-x-auto rounded-xl shadow-lg border mb-10 mt-10 border-gray-100 backdrop-blur-sm hidden sm:block">
         <table className="w-full border-collapse text-sm sm:text-base">
           <thead>
             <tr className="bg-[#FA2A3B] text-white uppercase tracking-wider">
