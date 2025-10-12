@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
@@ -26,7 +26,7 @@ const SendParcel = () => {
     if (user?.email) setValue("senderEmail", user.email);
   }, [user, setValue]);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const senderRegion = watch("senderRegion");
   const receiverRegion = watch("receiverRegion");
   const uniqueRegions = [...new Set(serviceCenter.map((w) => w.region))];
@@ -124,15 +124,11 @@ const SendParcel = () => {
     const payload = { ...confirmData, price: priceBreak?.selected?.total ?? 0 };
 
     try {
-      // 1) Save parcel
       const res = await axiosSecure.post("/parcels", payload);
-
-      // Some backends return { success: true }, others return insertedId — handle both.
       const saved =
         Boolean(res?.data?.success) || Boolean(res?.data?.insertedId);
 
       if (saved) {
-        // 2) Create tracking log in the format your backend expects
         try {
           const trackingPayload = {
             tracking_id: confirmData.trackingId,
@@ -155,14 +151,11 @@ const SendParcel = () => {
           position: "top-right",
         });
 
-        // reset UI
         reset();
         setParcelType("Document");
         setConfirmData(null);
         setPriceBreak(null);
-
-        // // navigate after a short delay so user sees toast
-        // navigate("/dashboard/myParcels");
+        navigate("/dashboard/myParcels");
       } else {
         toast.error("Failed to save parcel. Try again.");
         console.error("Parcel save response:", res?.data);
