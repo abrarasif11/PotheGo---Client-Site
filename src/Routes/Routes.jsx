@@ -18,6 +18,8 @@ import ManageAdmins from "../Pages/Dashboard/ManageAdmins/ManageAdmins";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import AdminRoutes from "./AdminRoutes/AdminRoutes";
 import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
+import RiderRoutes from "./RiderRoute/RiderRoute";
+import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +91,16 @@ export const router = createBrowserRouter([
         path: "track",
         Component: TrackParcel,
       },
+      // Rider Route //
+      {
+        path: "pendingDeliveries",
+        element: (
+          <RiderRoutes>
+            <PendingDeliveries />
+          </RiderRoutes>
+        ),
+      },
+      // Admin Route//
       {
         path: "pendingRiders",
         element: (
