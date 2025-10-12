@@ -106,7 +106,7 @@ const DashboardLayout = () => {
               Track Parcel
             </NavLink>
           </li>
-          {
+          {!roleLoading && role === "rider" && (
             <>
               <li>
                 <NavLink
@@ -122,7 +122,7 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
             </>
-          }
+          )}
           {!roleLoading && role === "admin" && (
             <>
               <li>
