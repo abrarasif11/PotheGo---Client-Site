@@ -105,6 +105,23 @@ const DashboardLayout = () => {
               Track Parcel
             </NavLink>
           </li>
+          {
+            <>
+              <li>
+                <NavLink
+                  to="/dashboard/pendingDeliveries"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaUserCheck className="w-5 h-5" />
+                  Pending Deliveries
+                </NavLink>
+              </li>
+            </>
+          }
           {!roleLoading && role === "admin" && (
             <>
               <li>
