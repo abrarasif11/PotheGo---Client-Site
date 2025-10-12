@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   FaBoxOpen,
+  FaClock,
   FaRoute,
   FaUserCheck,
   FaUserClock,
@@ -116,7 +117,7 @@ const DashboardLayout = () => {
                     }`
                   }
                 >
-                  <FaUserCheck className="w-5 h-5" />
+                  <FaClock className="w-5 h-5" />
                   Pending Deliveries
                 </NavLink>
               </li>
