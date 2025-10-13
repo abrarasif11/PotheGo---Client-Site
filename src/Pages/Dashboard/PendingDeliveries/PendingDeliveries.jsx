@@ -32,10 +32,10 @@ const PendingDeliveries = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["pendingDeliveries", user?.email]);
-      Swal.fire("✅ Success", "Parcel status updated successfully!", "success");
+      Swal.fire("Success", "Parcel status updated successfully!", "success");
     },
     onError: (err) => {
-      Swal.fire("❌ Error", err.message, "error");
+      Swal.fire(" Error", err.message, "error");
       console.error(err);
     },
   });
