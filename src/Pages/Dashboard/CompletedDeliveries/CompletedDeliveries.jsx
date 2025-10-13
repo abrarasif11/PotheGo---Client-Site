@@ -124,14 +124,29 @@ const CompletedDeliveries = () => {
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-600">
                   {parcel.picked_at
-                    ? new Date(parcel.picked_at).toLocaleString()
+                    ? new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      }).format(new Date(parcel.picked_at))
                     : "-"}
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-600">
                   {parcel.delivered_at
-                    ? new Date(parcel.delivered_at).toLocaleString()
+                    ? new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      }).format(new Date(parcel.delivered_at))
                     : "-"}
                 </td>
+
                 <td className="px-4 py-3 text-center">
                   {parcel.cashout_status === "cashed_out" ? (
                     <span className="inline-block  px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-lg">
@@ -182,13 +197,19 @@ const CompletedDeliveries = () => {
             <p className="text-sm mb-1">
               Picked At:{" "}
               {parcel.picked_at
-                ? new Date(parcel.picked_at).toLocaleString()
+                ? new Date(parcel.picked_at).toLocaleString("en-BD", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })
                 : "-"}
             </p>
             <p className="text-sm mb-2">
               Delivered At:{" "}
               {parcel.delivered_at
-                ? new Date(parcel.delivered_at).toLocaleString()
+                ? new Date(parcel.delivered_at).toLocaleString("en-BD", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })
                 : "-"}
             </p>
             {parcel.cashout_status === "cashed_out" ? (
