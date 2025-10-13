@@ -4,6 +4,7 @@ import {
   FaBoxOpen,
   FaCheckCircle,
   FaClock,
+  FaCoins,
   FaRoute,
   FaUserCheck,
   FaUserClock,
@@ -133,6 +134,19 @@ const DashboardLayout = () => {
                 >
                   <FaCheckCircle className="w-5 h-5" />
                   Completed Deliveries
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/myEarnings"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaCoins className="w-5 h-5" />
+                  My Earnings
                 </NavLink>
               </li>
             </>
