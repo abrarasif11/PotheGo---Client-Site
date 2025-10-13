@@ -23,7 +23,7 @@ const MyEarnings = () => {
     enabled: !!email,
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/rider/completed-parcels?email=${email}`
+        `rider/completed-parcels?email=${email}`
       );
       return res.data || [];
     },
@@ -68,9 +68,13 @@ const MyEarnings = () => {
 
   const [activePeriod, setActivePeriod] = useState("Today");
 
-  // Filter parcels for selected period
   const filteredParcels = parcels.filter((p) => {
-    const deliveredAt = p.delivered_at ? new Date(p.delivered_at) : null;
+    const deliveredAt = p.delivered_at
+      ? new Date(p.delivered_at).toLocaleString("en-BD", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        })
+      : null;
     if (!deliveredAt) return false;
 
     switch (activePeriod) {
@@ -171,7 +175,10 @@ const MyEarnings = () => {
                       </td>
                       <td className="px-4 py-2">
                         {p.delivered_at
-                          ? new Date(p.delivered_at).toLocaleString()
+                          ? new Date(p.delivered_at).toLocaleString("en-BD", {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            })
                           : "Not Delivered"}
                       </td>
                       <td className="px-4 py-2">

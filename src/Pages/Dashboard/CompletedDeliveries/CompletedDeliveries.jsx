@@ -134,7 +134,7 @@ const CompletedDeliveries = () => {
                 </td>
                 <td className="px-4 py-3 text-center">
                   {parcel.cashout_status === "cashed_out" ? (
-                    <span className="inline-block px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                    <span className="inline-block  px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-lg">
                       Cashed Out
                     </span>
                   ) : (
