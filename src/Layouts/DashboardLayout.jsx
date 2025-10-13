@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   FaBoxOpen,
+  FaCheckCircle,
   FaClock,
   FaRoute,
   FaUserCheck,
@@ -119,6 +120,19 @@ const DashboardLayout = () => {
                 >
                   <FaClock className="w-5 h-5" />
                   Pending Deliveries
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/completedDeliveries"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 mt-5 text-[#FA2A3B] hover:text-[#E02032] ${
+                      isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                    }`
+                  }
+                >
+                  <FaCheckCircle className="w-5 h-5" />
+                  Completed Deliveries
                 </NavLink>
               </li>
             </>
