@@ -32,10 +32,10 @@ const PendingDeliveries = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["pendingDeliveries", user?.email]);
-      Swal.fire(" Success", "Parcel status updated successfully!", "success");
+      Swal.fire("✅ Success", "Parcel status updated successfully!", "success");
     },
     onError: (err) => {
-      Swal.fire(" Error", err.message, "error");
+      Swal.fire("❌ Error", err.message, "error");
       console.error(err);
     },
   });
@@ -59,9 +59,9 @@ const PendingDeliveries = () => {
 
   if (parcels.length === 0) {
     return (
-      <div className="p-6 text-center">
+      <div className="p-6 text-center animate-fadeIn">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">
-          🚚 No pending deliveries
+          No pending deliveries
         </h2>
         <p className="text-gray-500 text-sm">
           Once a parcel is assigned to you, it’ll appear here.
@@ -71,14 +71,15 @@ const PendingDeliveries = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-3 sm:p-6 animate-fadeIn">
       <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-        🚚 Pending Deliveries
+        Pending Deliveries
       </h2>
 
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto rounded-2xl shadow-xl border border-gray-200 bg-white transition-all duration-500 hover:shadow-2xl">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-200 text-gray-700 uppercase text-xs font-semibold">
+          <thead className="bg-[#FA2A3B]/10 text-[#FA2A3B] uppercase text-xs font-semibold">
             <tr>
               <th className="px-4 py-3">#</th>
               <th className="px-4 py-3">Tracking ID</th>
@@ -96,24 +97,24 @@ const PendingDeliveries = () => {
             {parcels.map((parcel, index) => (
               <tr
                 key={parcel._id}
-                className={`border-t transition ${
+                className={`border-t transition-all duration-300 ${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } hover:bg-gray-100`}
+                } hover:bg-[#FA2A3B]/5 hover:scale-[1.01]`}
               >
                 <td className="px-4 py-3">{index + 1}</td>
-                <td className="px-4 py-3 font-medium text-gray-900">
+                <td className="px-4 py-3 font-semibold text-gray-900">
                   {parcel.trackingId}
                 </td>
                 <td className="px-4 py-3">{parcel.parcelName}</td>
                 <td className="px-4 py-3">{parcel.parcelWeight} kg</td>
                 <td className="px-4 py-3">
-                  <div>{parcel.senderName}</div>
+                  <div className="font-medium">{parcel.senderName}</div>
                   <div className="text-xs text-gray-500">
                     {parcel.senderRegion}
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <div>{parcel.receiverName}</div>
+                  <div className="font-medium">{parcel.receiverName}</div>
                   <div className="text-xs text-gray-500">
                     {parcel.receiverRegion}
                   </div>
@@ -124,7 +125,7 @@ const PendingDeliveries = () => {
 
                 <td className="px-4 py-3 text-center">
                   <span
-                    className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full min-w-[90px] ${
+                    className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full min-w-[90px] shadow-sm transition-all duration-300 ${
                       parcel.deliveryStatus === "Rider Assigned"
                         ? "bg-yellow-100 text-yellow-700"
                         : parcel.deliveryStatus === "In Transit"
@@ -142,7 +143,7 @@ const PendingDeliveries = () => {
                   {parcel.deliveryStatus === "Rider Assigned" && (
                     <button
                       onClick={() => handleStatusChange(parcel, "In Transit")}
-                      className="px-3 py-1 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all w-full sm:w-auto"
+                      className="px-3 py-1 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all hover:scale-105 w-full sm:w-auto shadow-md"
                     >
                       Mark Picked Up
                     </button>
@@ -151,7 +152,7 @@ const PendingDeliveries = () => {
                   {parcel.deliveryStatus === "In Transit" && (
                     <button
                       onClick={() => handleStatusChange(parcel, "Delivered")}
-                      className="px-3 py-1 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all w-full sm:w-auto"
+                      className="px-3 py-1 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all hover:scale-105 w-full sm:w-auto shadow-md"
                     >
                       Mark Delivered
                     </button>
@@ -161,6 +162,73 @@ const PendingDeliveries = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {parcels.map((parcel, index) => (
+          <div
+            key={parcel._id}
+            className="p-4 bg-white shadow-md rounded-2xl border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-semibold text-gray-800">
+                #{index + 1} • {parcel.parcelName}
+              </h3>
+              <span
+                className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                  parcel.deliveryStatus === "Rider Assigned"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : parcel.deliveryStatus === "In Transit"
+                    ? "bg-blue-100 text-blue-700"
+                    : parcel.deliveryStatus === "Delivered"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {parcel.deliveryStatus}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>Tracking ID:</strong> {parcel.trackingId}
+            </p>
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>Weight:</strong> {parcel.parcelWeight} kg
+            </p>
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>Sender:</strong> {parcel.senderName} (
+              {parcel.senderRegion})
+            </p>
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>Receiver:</strong> {parcel.receiverName} (
+              {parcel.receiverRegion})
+            </p>
+            <p className="text-sm text-gray-800 font-semibold">
+              💰 {parcel.price}৳
+            </p>
+
+            <div className="mt-3 flex flex-col sm:flex-row gap-2">
+              {parcel.deliveryStatus === "Rider Assigned" && (
+                <button
+                  onClick={() => handleStatusChange(parcel, "In Transit")}
+                  className="px-3 py-2 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all hover:scale-105"
+                >
+                  Mark Picked Up
+                </button>
+              )}
+
+              {parcel.deliveryStatus === "In Transit" && (
+                <button
+                  onClick={() => handleStatusChange(parcel, "Delivered")}
+                  className="px-3 py-2 rounded-md text-sm font-medium bg-[#FA2A3B] text-white hover:bg-[#E02032] transition-all hover:scale-105"
+                >
+                  Mark Delivered
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
