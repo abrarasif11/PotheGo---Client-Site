@@ -10,6 +10,7 @@ import {
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../Shared/Loader/Loader";
+import { FaCoins } from "react-icons/fa";
 
 const periods = ["Today", "Week", "Month", "Year", "Overall"];
 
@@ -87,9 +88,11 @@ const MyEarnings = () => {
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      <h2 className="text-3xl font-bold text-[#FA2A3B] text-center mb-4">
-        My Earnings
-      </h2>
+      <div className="flex items-center justify-center mt-5">
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+          <FaCoins className="text-[#E02032]" /> My Earnings
+        </h1>
+      </div>
 
       {isLoading ? (
         <Loader />
