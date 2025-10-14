@@ -6,6 +6,7 @@ import {
   FaMoneyBillWave,
   FaClock,
   FaHashtag,
+  FaBoxOpen,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
@@ -104,11 +105,13 @@ const MyParcel = () => {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-[#FA2A3B] text-center sm:text-left">
-        My Parcels
-      </h2>
+      <div className="flex items-center justify-center mt-5">
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+          <FaBoxOpen className="text-[#E02032]" /> My Parcels
+        </h1>
+      </div>
 
-      {/* 🖥 Desktop & Tablet Table */}
+      {/*  Desktop & Tablet Table */}
       <div className="overflow-x-auto hidden md:block">
         <table className="table w-full min-w-[600px] text-sm sm:text-base">
           <thead className="bg-[#FA2A3B]/10 text-gray-700 uppercase text-xs sm:text-sm">
@@ -199,7 +202,7 @@ const MyParcel = () => {
         </table>
       </div>
 
-      {/* 📱 Mobile View - Card Style */}
+      {/*  Mobile View - Card Style */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {parcels.length === 0 ? (
           <div className="text-center py-6 text-gray-500">
