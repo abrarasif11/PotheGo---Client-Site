@@ -4,6 +4,7 @@ import Loader from "../../../Shared/Loader/Loader";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
+import { FaClock } from "react-icons/fa";
 
 const PendingDeliveries = () => {
   const { user } = useAuth();
@@ -72,9 +73,11 @@ const PendingDeliveries = () => {
 
   return (
     <div className="p-3 sm:p-6 animate-fadeIn">
-      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-        Pending Deliveries
-      </h2>
+      <div className="flex items-center justify-center mt-5">
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+          <FaClock className="text-[#E02032]" /> Pending Deliveries
+        </h1>
+      </div>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto rounded-2xl shadow-xl border border-gray-200 bg-white transition-all duration-500 hover:shadow-2xl">
