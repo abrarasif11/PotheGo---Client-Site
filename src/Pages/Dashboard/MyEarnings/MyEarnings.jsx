@@ -62,19 +62,13 @@ const MyEarnings = () => {
         earningsByPeriod["Month"] += earning;
       if (isAfter(deliveredAt, yearStart)) earningsByPeriod["Year"] += earning;
     }
-
     earningsByPeriod["Overall"] += earning;
   });
 
   const [activePeriod, setActivePeriod] = useState("Today");
 
   const filteredParcels = parcels.filter((p) => {
-    const deliveredAt = p.delivered_at
-      ? new Date(p.delivered_at).toLocaleString("en-BD", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })
-      : null;
+    const deliveredAt = p.delivered_at ? new Date(p.delivered_at) : null;
     if (!deliveredAt) return false;
 
     switch (activePeriod) {
@@ -92,69 +86,75 @@ const MyEarnings = () => {
   });
 
   return (
-    <div className="p-6 space-y-6">
-      <h2 className="text-2xl font-bold">My Earnings</h2>
+    <div className="p-4 sm:p-6 space-y-6">
+      <h2 className="text-3xl font-bold text-[#FA2A3B] text-center mb-4">
+        My Earnings
+      </h2>
 
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          {/* Top Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-green-100 p-4 rounded-xl shadow hover:scale-105 transition-transform">
-              <p className="text-lg font-semibold">Total Earnings</p>
-              <p className="text-2xl font-bold text-green-600">
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-[#FA2A3B]/10 border border-[#FA2A3B]/30 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+              <p className="text-base font-medium text-gray-700">
+                Total Earnings
+              </p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#FA2A3B] mt-1">
                 ৳{total.toFixed(2)}
               </p>
             </div>
-            <div className="bg-blue-100 p-4 rounded-xl shadow hover:scale-105 transition-transform">
-              <p className="text-lg font-semibold">Cashed Out</p>
-              <p className="text-2xl font-bold text-blue-600">
+            <div className="bg-[#E02032]/10 border border-[#E02032]/30 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+              <p className="text-base font-medium text-gray-700">Cashed Out</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#E02032] mt-1">
                 ৳{totalCashedOut.toFixed(2)}
               </p>
             </div>
-            <div className="bg-yellow-100 p-4 rounded-xl shadow hover:scale-105 transition-transform">
-              <p className="text-lg font-semibold">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">
+            <div className="bg-yellow-100 border border-yellow-200 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+              <p className="text-base font-medium text-gray-700">Pending</p>
+              <p className="text-2xl sm:text-3xl font-bold text-yellow-600 mt-1">
                 ৳{totalPending.toFixed(2)}
               </p>
             </div>
           </div>
 
-          {/* Period Tabs */}
-          <div className="flex space-x-2 mt-6">
+          {/* Period Buttons */}
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
             {periods.map((period) => (
               <button
                 key={period}
                 onClick={() => setActivePeriod(period)}
-                className={`px-4 py-2 rounded-lg font-semibold ${
+                className={`px-4 py-2 rounded-full font-semibold transition-all border ${
                   activePeriod === period
-                    ? "bg-gray-200 text-gray-800"
-                    : "bg-white text-gray-500 hover:bg-gray-100"
-                } transition-colors`}
+                    ? "bg-[#FA2A3B] text-white border-[#FA2A3B]"
+                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                }`}
               >
                 {period}
               </button>
             ))}
           </div>
 
-          {/* Earnings Amount */}
-          <div className="mt-4 bg-base-100 p-4 rounded-lg shadow">
-            <p className="text-gray-500">Earnings ({activePeriod}):</p>
-            <p className="text-2xl font-bold text-green-700">
+          {/* Earnings Display */}
+          <div className="mt-4 text-center bg-white border border-gray-200 p-5 rounded-2xl shadow-md">
+            <p className="text-gray-600 text-sm sm:text-base">
+              Earnings ({activePeriod})
+            </p>
+            <p className="text-3xl sm:text-4xl font-bold text-[#FA2A3B] mt-1">
               ৳{earningsByPeriod[activePeriod]?.toFixed(2) || "0.00"}
             </p>
           </div>
 
-          {/* Earnings Table */}
-          <div className="overflow-x-auto mt-4">
-            <table className="table-auto w-full border border-gray-200">
-              <thead className="bg-gray-100">
+          {/* Table Section */}
+          <div className="overflow-x-auto mt-6 bg-white rounded-2xl border border-gray-200 shadow-md">
+            <table className="w-full text-sm sm:text-base">
+              <thead className="bg-gray-100 text-gray-700 uppercase text-xs sm:text-sm">
                 <tr>
-                  <th className="px-4 py-2 text-left">Parcel Name</th>
-                  <th className="px-4 py-2 text-left">Delivered At</th>
-                  <th className="px-4 py-2 text-left">Earning</th>
-                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-3 text-left">Parcel Name</th>
+                  <th className="px-4 py-3 text-left">Delivered At</th>
+                  <th className="px-4 py-3 text-left">Earning</th>
+                  <th className="px-4 py-3 text-left">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,18 +162,21 @@ const MyEarnings = () => {
                   <tr>
                     <td
                       colSpan={4}
-                      className="text-center py-4 italic text-gray-400"
+                      className="text-center py-6 text-gray-400 italic"
                     >
-                      No earnings in this period.
+                      No earnings found for this period.
                     </td>
                   </tr>
                 ) : (
                   filteredParcels.map((p) => (
-                    <tr key={p._id} className="border-b">
-                      <td className="px-4 py-2">
+                    <tr
+                      key={p._id}
+                      className="border-b hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-4 py-3 font-medium">
                         {p.parcelName || "Unnamed Parcel"}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3 text-gray-600">
                         {p.delivered_at
                           ? new Date(p.delivered_at).toLocaleString("en-BD", {
                               dateStyle: "medium",
@@ -181,11 +184,21 @@ const MyEarnings = () => {
                             })
                           : "Not Delivered"}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3 text-[#FA2A3B] font-semibold">
                         ৳{calculateEarning(p).toFixed(2)}
                       </td>
-                      <td className="px-4 py-2 capitalize">
-                        {(p.cashout_status || "pending").replace("_", " ")}
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                            p.cashout_status === "cashed_out"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {(p.cashout_status || "Pending")
+                            .replace("_", " ")
+                            .toUpperCase()}
+                        </span>
                       </td>
                     </tr>
                   ))
