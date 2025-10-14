@@ -22,6 +22,7 @@ import RiderRoutes from "./RiderRoute/RiderRoute";
 import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import MyEarnings from "../Pages/Dashboard/MyEarnings/MyEarnings";
+import PageError from "../Pages/ErrorPage/PageError";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+        errorElement: <PageError />,
       },
       {
         path: "/error",
