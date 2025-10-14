@@ -3,7 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../../Shared/Loader/Loader";
-import { FaClock, FaHashtag } from "react-icons/fa";
+import { FaClock, FaCreditCard, FaHashtag } from "react-icons/fa";
 
 const PaymentHistory = () => {
   const { user } = useAuth();
@@ -23,9 +23,11 @@ const PaymentHistory = () => {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-white  text-black">
-      <h2 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-3 text-[#E02032]">
-        Payment History
-      </h2>
+      <div className="flex items-center justify-center mt-5">
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+          <FaCreditCard className="text-[#E02032]" /> My Payment History
+        </h1>
+      </div>
 
       {payments.length === 0 ? (
         <p className="text-center text-gray-500">No payment history found.</p>
