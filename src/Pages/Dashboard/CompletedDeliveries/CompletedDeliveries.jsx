@@ -46,8 +46,9 @@ const CompletedDeliveries = () => {
       text: "You are about to cash out this delivery.",
       icon: "warning",
       showCancelButton: true,
+      confirmButtonColor: "#FA2A3B",
+      cancelButtonColor: "#6B7280",
       confirmButtonText: "Yes, Cash Out",
-      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         cashout(parcelId)
@@ -65,23 +66,30 @@ const CompletedDeliveries = () => {
 
   if (!parcels || parcels.length === 0)
     return (
-      <p className="text-gray-500 text-center mt-10">No deliveries yet.</p>
+      <div className="p-6 text-center animate-fadeIn">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">
+          No completed deliveries yet.
+        </h2>
+        <p className="text-gray-500 text-sm">
+          Once you finish deliveries, they’ll appear here.
+        </p>
+      </div>
     );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] ">
+    <div className="p-3 sm:p-6 animate-fadeIn">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-[#FA2A3B] text-center">
         Completed Deliveries
       </h2>
 
       {/* Desktop Table */}
-      <div className="overflow-x-auto border rounded-lg hidden sm:block shadow-lg">
-        <table className="w-full text-sm sm:text-base border-collapse">
-          <thead className="bg-[#FA2A3B] text-white uppercase text-xs sm:text-sm">
+      <div className="hidden md:block overflow-x-auto rounded-2xl shadow-xl border border-gray-200 bg-white transition-all duration-500 hover:shadow-2xl">
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-[#FA2A3B]/10 text-[#FA2A3B] uppercase text-xs font-semibold">
             <tr>
               <th className="px-4 py-3">#</th>
               <th className="px-4 py-3">Tracking ID</th>
-              <th className="px-4 py-3">Title</th>
+              <th className="px-4 py-3">Parcel</th>
               <th className="px-4 py-3">From</th>
               <th className="px-4 py-3">To</th>
               <th className="px-4 py-3">Fee (৳)</th>
@@ -91,42 +99,47 @@ const CompletedDeliveries = () => {
               <th className="px-4 py-3 text-center">Cashout</th>
             </tr>
           </thead>
+
           <tbody>
-            {parcels.map((parcel, idx) => (
+            {parcels.map((parcel, index) => (
               <tr
                 key={parcel._id}
-                className={`transition-all duration-300 ${
-                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } hover:bg-[#fff4f4] hover:scale-[1.01]`}
+                className={`border-t transition-all duration-300 ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                } hover:bg-[#FA2A3B]/5 hover:scale-[1.01]`}
               >
-                <td className="px-4 py-3">{idx + 1}</td>
-                <td className="px-4 py-3 font-mono font-medium">
+                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3 font-semibold text-gray-900 font-mono">
                   {parcel.trackingId}
                 </td>
                 <td className="px-4 py-3">{parcel.parcelName}</td>
+
                 <td className="px-4 py-3">
-                  <div>{parcel.senderName}</div>
+                  <div className="font-medium">{parcel.senderName}</div>
                   <div className="text-xs text-gray-500">
                     {parcel.senderRegion}
                   </div>
                 </td>
+
                 <td className="px-4 py-3">
-                  <div>{parcel.receiverName}</div>
+                  <div className="font-medium">{parcel.receiverName}</div>
                   <div className="text-xs text-gray-500">
                     {parcel.receiverRegion}
                   </div>
                 </td>
+
                 <td className="px-4 py-3 font-semibold text-gray-800">
                   {parcel.price}৳
                 </td>
                 <td className="px-4 py-3 font-semibold text-green-700">
                   {calculateEarning(parcel)}৳
                 </td>
+
                 <td className="px-4 py-3 text-xs text-gray-600">
                   {parcel.picked_at
                     ? new Intl.DateTimeFormat("en-GB", {
                         day: "2-digit",
-                        month: "2-digit",
+                        month: "short",
                         year: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
@@ -134,11 +147,12 @@ const CompletedDeliveries = () => {
                       }).format(new Date(parcel.picked_at))
                     : "-"}
                 </td>
+
                 <td className="px-4 py-3 text-xs text-gray-600">
                   {parcel.delivered_at
                     ? new Intl.DateTimeFormat("en-GB", {
                         day: "2-digit",
-                        month: "2-digit",
+                        month: "short",
                         year: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
@@ -149,13 +163,13 @@ const CompletedDeliveries = () => {
 
                 <td className="px-4 py-3 text-center">
                   {parcel.cashout_status === "cashed_out" ? (
-                    <span className="inline-block  px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-lg">
+                    <span className="inline-flex items-center justify-center px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full min-w-[90px]">
                       Cashed Out
                     </span>
                   ) : (
                     <button
                       onClick={() => handleCashout(parcel._id)}
-                      className="px-3 py-1 text-xs font-medium text-white bg-yellow-500 rounded hover:bg-yellow-600 transition-all"
+                      className="px-3 py-1 text-xs font-medium text-white bg-[#FA2A3B] rounded hover:bg-[#E02032] transition-all shadow-md hover:scale-105"
                     >
                       Cashout
                     </button>
@@ -168,34 +182,40 @@ const CompletedDeliveries = () => {
       </div>
 
       {/* Mobile Cards */}
-      <div className="sm:hidden grid gap-4">
-        {parcels.map((parcel) => (
+      <div className="grid grid-cols-1 gap-4 md:hidden mt-4">
+        {parcels.map((parcel, index) => (
           <div
             key={parcel._id}
-            className="bg-white p-4 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all animate-fadeIn"
+            className="p-4 bg-white shadow-md rounded-2xl border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]"
           >
-            <p className="font-mono font-semibold text-sm mb-1">
-              {parcel.trackingId}
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-semibold text-gray-800">
+                #{index + 1} • {parcel.parcelName}
+              </h3>
+              <span className="inline-flex items-center justify-center px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
+                Completed
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>Tracking ID:</strong> {parcel.trackingId}
             </p>
-            <p className="font-semibold text-base mb-1">{parcel.parcelName}</p>
-            <p className="text-sm mb-1">Weight: {parcel.parcelWeight} kg</p>
-            <p className="text-sm mb-1">
-              From: {parcel.senderName} ({parcel.senderRegion})
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>From:</strong> {parcel.senderName} ({parcel.senderRegion})
             </p>
-            <p className="text-sm mb-1">
-              To: {parcel.receiverName} ({parcel.receiverRegion})
+            <p className="text-sm text-gray-600 mb-1">
+              <strong>To:</strong> {parcel.receiverName} (
+              {parcel.receiverRegion})
             </p>
-            <p className="text-sm mb-1">
-              Fee: <span className="font-semibold">{parcel.price}৳</span>
-            </p>
-            <p className="text-sm mb-1">
-              Your Earning:{" "}
-              <span className="font-semibold text-green-700">
-                {calculateEarning(parcel)}৳
+            <p className="text-sm text-gray-800 font-semibold">
+              💰 {parcel.price}৳ —{" "}
+              <span className="text-green-700 font-bold">
+                Earned: {calculateEarning(parcel)}৳
               </span>
             </p>
-            <p className="text-sm mb-1">
-              Picked At:{" "}
+
+            <p className="text-sm mt-1 text-gray-600">
+              <strong>Picked:</strong>{" "}
               {parcel.picked_at
                 ? new Date(parcel.picked_at).toLocaleString("en-BD", {
                     dateStyle: "medium",
@@ -203,8 +223,9 @@ const CompletedDeliveries = () => {
                   })
                 : "-"}
             </p>
-            <p className="text-sm mb-2">
-              Delivered At:{" "}
+
+            <p className="text-sm text-gray-600 mb-3">
+              <strong>Delivered:</strong>{" "}
               {parcel.delivered_at
                 ? new Date(parcel.delivered_at).toLocaleString("en-BD", {
                     dateStyle: "medium",
@@ -212,14 +233,15 @@ const CompletedDeliveries = () => {
                   })
                 : "-"}
             </p>
+
             {parcel.cashout_status === "cashed_out" ? (
-              <span className="inline-block w-full text-center px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+              <span className="inline-block w-full text-center px-3 py-2 text-xs font-medium text-green-700 bg-green-100 rounded-full">
                 Cashed Out
               </span>
             ) : (
               <button
                 onClick={() => handleCashout(parcel._id)}
-                className="w-full bg-yellow-500 text-white py-2 rounded-lg font-semibold hover:bg-yellow-600 transition-all"
+                className="w-full bg-[#FA2A3B] text-white py-2 rounded-lg font-semibold hover:bg-[#E02032] transition-all hover:scale-105 shadow-md"
               >
                 Cashout
               </button>
