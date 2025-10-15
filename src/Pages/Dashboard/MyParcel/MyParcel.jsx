@@ -171,28 +171,29 @@ const MyParcel = () => {
                       timeStyle: "short",
                     })}
                   </td>
-                  <td className="flex flex-wrap justify-center gap-2 sm:gap-3">
+
+                  <td className="flex justify-center items-center gap-2 py-3">
                     <button
                       onClick={() => handleView(parcel)}
-                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
+                      className="flex items-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs sm:text-sm font-medium hover:bg-[#e12532] transition-all duration-200"
                     >
-                      <FaEye />
+                      <FaEye /> View
                     </button>
 
                     {parcel.status !== "Paid" && (
                       <button
                         onClick={() => handlePay(parcel)}
-                        className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
+                        className="flex items-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs sm:text-sm font-medium hover:bg-[#e12532] transition-all duration-200"
                       >
-                        <FaMoneyBillWave />
+                        <FaMoneyBillWave /> Pay
                       </button>
                     )}
 
                     <button
                       onClick={() => handleDelete(parcel._id)}
-                      className="btn btn-xs sm:btn-sm text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex items-center justify-center"
+                      className="flex items-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs sm:text-sm font-medium hover:bg-[#e12532] transition-all duration-200"
                     >
-                      <FaTrashAlt />
+                      <FaTrashAlt /> Delete
                     </button>
                   </td>
                 </tr>
@@ -262,24 +263,27 @@ const MyParcel = () => {
                     {parcel.status}
                   </span>
                 </p>
-                <div className="flex items-center gap-2 mt-2">
+
+                <div className="flex justify-between mt-3">
                   <button
                     onClick={() => handleView(parcel)}
-                    className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                    className="flex items-center justify-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs hover:bg-[#e12532] w-[30%]"
                   >
                     <FaEye /> View
                   </button>
+
                   {parcel.status !== "Paid" && (
                     <button
                       onClick={() => handlePay(parcel)}
-                      className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                      className="flex items-center justify-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs hover:bg-[#e12532] w-[30%]"
                     >
                       <FaMoneyBillWave /> Pay
                     </button>
                   )}
+
                   <button
                     onClick={() => handleDelete(parcel._id)}
-                    className="btn btn-xs text-white bg-[#FA2A3B] border-none hover:bg-[#e12532] flex-1"
+                    className="flex items-center justify-center gap-1 bg-[#FA2A3B] text-white rounded-md px-2.5 py-1 text-xs hover:bg-[#e12532] w-[30%]"
                   >
                     <FaTrashAlt /> Delete
                   </button>
