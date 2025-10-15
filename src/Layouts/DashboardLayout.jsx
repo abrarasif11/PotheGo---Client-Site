@@ -2,14 +2,12 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   FaBoxOpen,
-  FaBuilding,
   FaCheckCircle,
   FaClock,
   FaCoins,
   FaHome,
   FaHouseUser,
   FaRoute,
-  FaTachometerAlt,
   FaUserCheck,
   FaUserClock,
   FaUserPlus,
