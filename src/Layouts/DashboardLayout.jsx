@@ -2,10 +2,14 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   FaBoxOpen,
+  FaBuilding,
   FaCheckCircle,
   FaClock,
   FaCoins,
+  FaHome,
+  FaHouseUser,
   FaRoute,
+  FaTachometerAlt,
   FaUserCheck,
   FaUserClock,
   FaUserPlus,
@@ -71,9 +75,22 @@ const DashboardLayout = () => {
           </Link>
           <li>
             <NavLink
-              to="/dashboard/myParcels"
+              to="/dashboard"
               className={({ isActive }) =>
                 `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-10 gap-2 ${
+                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                }`
+              }
+            >
+              <FaHouseUser className="w-5 h-5" />
+              Admin Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/dashboard/myParcels"
+              className={({ isActive }) =>
+                `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-6 gap-2 ${
                   isActive ? "bg-base-300 rounded-lg font-semibold" : ""
                 }`
               }
