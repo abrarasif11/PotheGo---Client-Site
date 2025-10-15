@@ -3,9 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../../../Shared/Loader/Loader";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useTrackingLogger from "../../../hooks/useTrackingLogger";
+import useAuth from "../../../hooks/useAuth";
 
 const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
+  const { logTracking } = useTrackingLogger();
+  const { user } = useAuth();
   const [selectedParcel, setSelectedParcel] = useState(null);
   const [selectedRider, setSelectedRider] = useState(null);
 
@@ -54,7 +58,13 @@ const AssignRider = () => {
       );
 
       const updatedParcel = res.data.parcel;
-
+      await logTracking({
+        trackingId: updatedParcel.trackingId,
+        status: "RIDER ASSIGNED",
+        details: `Rider (${riderName}) is assigned for your parcel.`,
+        deliveryInstruction: updatedParcel.deliveryInstruction || "",
+        updatedBy: user?.email || "system",
+      });
       Swal.fire({
         icon: "success",
         title: "Rider Assigned!",
