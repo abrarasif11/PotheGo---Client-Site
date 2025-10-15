@@ -3,9 +3,9 @@ import React from "react";
 import useUserRole from "../../../hooks/useUserRole";
 import Loader from "../../../Shared/Loader/Loader";
 import UserDashboard from "./UserDashboard";
-import RiderDashboard from "./RiderDashbaord";
 import AdminDashboard from "./AdminDashboard";
 import ErrorPage from "../../ErrorPage/ErrorPage";
+import RiderDashboard from "./RiderDashbaord";
 
 const DashboardHome = () => {
   const { role, roleLoading } = useUserRole();
