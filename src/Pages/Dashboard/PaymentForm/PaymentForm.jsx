@@ -82,7 +82,6 @@ const PaymentForm = () => {
           console.log("Payment Success!!!");
           console.log(result);
 
-          // Create Payment History //
           const paymentRes = await axiosSecure.post("payments", {
             parcelId: id,
             email: user?.email,
@@ -93,6 +92,14 @@ const PaymentForm = () => {
 
           if (paymentRes.data.insertedId) {
             console.log("Payment Successful");
+            const trackingId = parcelInfo?.trackingId || id;
+
+            await axiosSecure.post("trackings", {
+              tracking_id: trackingId,
+              status: "Payment Successful",
+              details: `Payment completed by ${user.displayName || user.email}`,
+              updated_by: user.email,
+            });
             Swal.fire({
               title: "Payment Successful!",
               text: `Transaction ID: ${result.paymentIntent.id}`,
