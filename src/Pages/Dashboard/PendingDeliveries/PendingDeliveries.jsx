@@ -5,17 +5,21 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 import { FaClock } from "react-icons/fa";
+import useTrackingLogger from "../../../hooks/useTrackingLogger";
 
 const PendingDeliveries = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { logTracking } = useTrackingLogger();
 
   const { data: parcelsData, isLoading } = useQuery({
     queryKey: ["pendingDeliveries", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:6969/riders/pendingDeliveries?email=${user?.email}`
+        `http://localhost:6969/riders/pendingDeliveries?email=${encodeURIComponent(
+          user?.email
+        )}`
       );
       return res.data;
     },
@@ -25,18 +29,26 @@ const PendingDeliveries = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ parcel, status }) => {
-      const res = await axios.patch(
-        `http://localhost:6969/parcels/${parcel._id}/status`,
-        { status }
-      );
-      return res.data;
+      await axios.patch(`http://localhost:6969/parcels/${parcel._id}/status`, {
+        status,
+      });
+      return { parcel, status };
     },
-    onSuccess: () => {
+    onSuccess: ({ parcel, status }) => {
       queryClient.invalidateQueries(["pendingDeliveries", user?.email]);
-      Swal.fire("Success", "Parcel status updated successfully!", "success");
+      Swal.fire("Success", "Parcel status updated!", "success");
+
+      if (status === "In Transit" || status === "Delivered") {
+        logTracking({
+          trackingId: parcel.trackingId,
+          status,
+          details: `Parcel marked as ${status}`,
+          updatedBy: user?.email || "system",
+        });
+      }
     },
     onError: (err) => {
-      Swal.fire(" Error", err.message, "error");
+      Swal.fire("Error", err.message || "Failed to update status", "error");
       console.error(err);
     },
   });
@@ -97,14 +109,14 @@ const PendingDeliveries = () => {
           </thead>
 
           <tbody>
-            {parcels.map((parcel, index) => (
+            {parcels.map((parcel, idx) => (
               <tr
                 key={parcel._id}
                 className={`border-t transition-all duration-300 ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                 } hover:bg-[#FA2A3B]/5 hover:scale-[1.01]`}
               >
-                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3">{idx + 1}</td>
                 <td className="px-4 py-3 font-semibold text-gray-900">
                   {parcel.trackingId}
                 </td>
@@ -125,7 +137,6 @@ const PendingDeliveries = () => {
                 <td className="px-4 py-3 font-semibold text-gray-800">
                   {parcel.price}৳
                 </td>
-
                 <td className="px-4 py-3 text-center">
                   <span
                     className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full min-w-[90px] shadow-sm transition-all duration-300 ${
@@ -141,7 +152,6 @@ const PendingDeliveries = () => {
                     {parcel.deliveryStatus}
                   </span>
                 </td>
-
                 <td className="px-4 py-3 text-center flex flex-col sm:flex-row justify-center gap-2">
                   {parcel.deliveryStatus === "Rider Assigned" && (
                     <button
@@ -151,7 +161,6 @@ const PendingDeliveries = () => {
                       Mark Picked Up
                     </button>
                   )}
-
                   {parcel.deliveryStatus === "In Transit" && (
                     <button
                       onClick={() => handleStatusChange(parcel, "Delivered")}
@@ -169,14 +178,14 @@ const PendingDeliveries = () => {
 
       {/* Mobile Cards */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
-        {parcels.map((parcel, index) => (
+        {parcels.map((parcel, idx) => (
           <div
             key={parcel._id}
             className="p-4 bg-white shadow-md rounded-2xl border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]"
           >
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-semibold text-gray-800">
-                #{index + 1} • {parcel.parcelName}
+                #{idx + 1} • {parcel.parcelName}
               </h3>
               <span
                 className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -220,7 +229,6 @@ const PendingDeliveries = () => {
                   Mark Picked Up
                 </button>
               )}
-
               {parcel.deliveryStatus === "In Transit" && (
                 <button
                   onClick={() => handleStatusChange(parcel, "Delivered")}
