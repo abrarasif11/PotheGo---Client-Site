@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import useAuth from "../../../Hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAuth from "../../../hooks/useAuth";
 
 const TrackParcelPage = () => {
   const axiosSecure = useAxiosSecure();
@@ -16,7 +16,7 @@ const TrackParcelPage = () => {
     queryKey: ["userParcels", user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      const res = await axiosSecure.get(`/parcels?email=${user.email}`);
+      const res = await axiosSecure.get(`parcels?email=${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -32,7 +32,7 @@ const TrackParcelPage = () => {
     queryFn: async () => {
       if (!selectedParcel?.trackingId) return [];
       const res = await axiosSecure.get(
-        `/trackings/${selectedParcel.trackingId}`
+        `trackings/${selectedParcel.trackingId}`
       );
       return res.data;
     },
