@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { FaTimes, FaUserSlash, FaSearch } from "react-icons/fa";
+import { FaTimes, FaUserSlash, FaSearch, FaUserCheck } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
@@ -46,9 +46,11 @@ const ActiveRiders = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-white to-[#fff5f5] min-h-screen">
-      <h2 className="text-3xl font-bold text-center mb-6 text-[#E02032]">
-        Active Riders
-      </h2>
+      <div className="flex items-center justify-center mt-5">
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+          <FaUserCheck className="text-[#E02032]" /> Active Riders
+        </h1>
+      </div>
 
       {/* Search */}
       <div className="mb-4 relative w-full max-w-sm mx-auto md:mx-0">
