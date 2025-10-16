@@ -10,7 +10,13 @@ import {
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../Shared/Loader/Loader";
-import { FaCoins } from "react-icons/fa";
+import {
+  FaCoins,
+  FaArrowUp,
+  FaArrowDown,
+  FaMoneyBillWave,
+} from "react-icons/fa";
+import CountUp from "react-countup";
 
 const periods = ["Today", "Week", "Month", "Year", "Overall"];
 
@@ -89,8 +95,8 @@ const MyEarnings = () => {
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div className="flex items-center justify-center mt-5">
-        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
-          <FaCoins className="text-[#E02032]" /> My Earnings
+        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B] animate-fadeIn">
+          <FaCoins className="text-[#E02032] animate-bounce" /> My Earnings
         </h1>
       </div>
 
@@ -100,24 +106,37 @@ const MyEarnings = () => {
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#FA2A3B]/10 border border-[#FA2A3B]/30 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+            <div className="bg-[#FA2A3B]/10 border border-[#FA2A3B]/30 p-5 rounded-2xl shadow-md hover:shadow-xl hover:scale-[1.03] transition-transform relative overflow-hidden">
+              <FaMoneyBillWave className="absolute -top-3 -right-3 text-5xl text-[#FA2A3B]/20 animate-pulse" />
               <p className="text-base font-medium text-gray-700">
                 Total Earnings
               </p>
-              <p className="text-2xl sm:text-3xl font-bold text-[#FA2A3B] mt-1">
-                ৳{total.toFixed(2)}
+              <p className="text-3xl sm:text-4xl font-bold text-[#FA2A3B] mt-2">
+                <CountUp end={total} duration={1.5} prefix="৳" decimals={2} />
               </p>
             </div>
-            <div className="bg-[#E02032]/10 border border-[#E02032]/30 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+            <div className="bg-[#E02032]/10 border border-[#E02032]/30 p-5 rounded-2xl shadow-md hover:shadow-xl hover:scale-[1.03] transition-transform relative overflow-hidden">
+              <FaArrowUp className="absolute -top-3 -right-3 text-5xl text-[#E02032]/20 animate-pulse" />
               <p className="text-base font-medium text-gray-700">Cashed Out</p>
-              <p className="text-2xl sm:text-3xl font-bold text-[#E02032] mt-1">
-                ৳{totalCashedOut.toFixed(2)}
+              <p className="text-3xl sm:text-4xl font-bold text-[#E02032] mt-2">
+                <CountUp
+                  end={totalCashedOut}
+                  duration={1.5}
+                  prefix="৳"
+                  decimals={2}
+                />
               </p>
             </div>
-            <div className="bg-yellow-100 border border-yellow-200 p-4 rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform">
+            <div className="bg-yellow-100 border border-yellow-200 p-5 rounded-2xl shadow-md hover:shadow-xl hover:scale-[1.03] transition-transform relative overflow-hidden">
+              <FaArrowDown className="absolute -top-3 -right-3 text-5xl text-yellow-300 animate-pulse" />
               <p className="text-base font-medium text-gray-700">Pending</p>
-              <p className="text-2xl sm:text-3xl font-bold text-yellow-600 mt-1">
-                ৳{totalPending.toFixed(2)}
+              <p className="text-3xl sm:text-4xl font-bold text-yellow-600 mt-2">
+                <CountUp
+                  end={totalPending}
+                  duration={1.5}
+                  prefix="৳"
+                  decimals={2}
+                />
               </p>
             </div>
           </div>
@@ -130,7 +149,7 @@ const MyEarnings = () => {
                 onClick={() => setActivePeriod(period)}
                 className={`px-4 py-2 rounded-full font-semibold transition-all border ${
                   activePeriod === period
-                    ? "bg-[#FA2A3B] text-white border-[#FA2A3B]"
+                    ? "bg-[#FA2A3B] text-white border-[#FA2A3B] shadow-md"
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
                 }`}
               >
@@ -140,12 +159,18 @@ const MyEarnings = () => {
           </div>
 
           {/* Earnings Display */}
-          <div className="mt-4 text-center bg-white border border-gray-200 p-5 rounded-2xl shadow-md">
+          <div className="mt-4 text-center bg-white border border-gray-200 p-6 rounded-2xl shadow-md relative overflow-hidden hover:shadow-xl transition-shadow">
+            <FaCoins className="absolute top-3 right-3 text-3xl text-[#FA2A3B]/20 animate-pulse" />
             <p className="text-gray-600 text-sm sm:text-base">
               Earnings ({activePeriod})
             </p>
-            <p className="text-3xl sm:text-4xl font-bold text-[#FA2A3B] mt-1">
-              ৳{earningsByPeriod[activePeriod]?.toFixed(2) || "0.00"}
+            <p className="text-4xl sm:text-5xl font-bold text-[#FA2A3B] mt-2">
+              <CountUp
+                end={earningsByPeriod[activePeriod] || 0}
+                duration={1.5}
+                prefix="৳"
+                decimals={2}
+              />
             </p>
           </div>
 
@@ -174,7 +199,7 @@ const MyEarnings = () => {
                   filteredParcels.map((p) => (
                     <tr
                       key={p._id}
-                      className="border-b hover:bg-gray-50 transition-colors"
+                      className="border-b hover:bg-[#FA2A3B]/5 transition-colors"
                     >
                       <td className="px-4 py-3 font-medium">
                         {p.parcelName || "Unnamed Parcel"}
@@ -192,10 +217,10 @@ const MyEarnings = () => {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                          className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap transition-all ${
                             p.cashout_status === "cashed_out"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
+                              ? "bg-green-100 text-green-700 animate-pulse"
+                              : "bg-gray-100 text-gray-700 hover:bg-[#FA2A3B]/10"
                           }`}
                         >
                           {(p.cashout_status || "Pending")
