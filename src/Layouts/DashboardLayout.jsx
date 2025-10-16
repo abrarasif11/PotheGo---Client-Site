@@ -81,7 +81,7 @@ const DashboardLayout = () => {
               }
             >
               <FaHouseUser className="w-5 h-5" />
-              Admin Dashboard
+              Home
             </NavLink>
           </li>
           <li>
