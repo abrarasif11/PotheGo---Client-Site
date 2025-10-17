@@ -17,7 +17,7 @@ const PendingDeliveries = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:6969/riders/pendingDeliveries?email=${encodeURIComponent(
+        `https://pothe-go-server.vercel.app/riders/pendingDeliveries?email=${encodeURIComponent(
           user?.email
         )}`
       );
@@ -29,9 +29,12 @@ const PendingDeliveries = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ parcel, status }) => {
-      await axios.patch(`http://localhost:6969/parcels/${parcel._id}/status`, {
-        status,
-      });
+      await axios.patch(
+        `https://pothe-go-server.vercel.app/parcels/${parcel._id}/status`,
+        {
+          status,
+        }
+      );
       return { parcel, status };
     },
     onSuccess: ({ parcel, status }) => {

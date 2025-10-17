@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: `http://localhost:6969/`,
+  baseURL: `https://pothe-go-server.vercel.app/`,
 });
 
 const useAxios = () => {

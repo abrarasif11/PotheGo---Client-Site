@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "./useAuth";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:6969/",
+  baseURL: "https://pothe-go-server.vercel.app/",
 });
 
 const useAxiosSecure = () => {
