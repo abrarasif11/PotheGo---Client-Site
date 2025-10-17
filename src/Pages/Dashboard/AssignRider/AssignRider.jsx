@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useTrackingLogger from "../../../hooks/useTrackingLogger";
 import useAuth from "../../../hooks/useAuth";
+import { FaUserPlus } from "react-icons/fa";
 
 const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
@@ -97,9 +98,11 @@ const AssignRider = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center text-[#FA2A3B] mt-5">
-        Assign Rider to Parcels
-      </h2>
+      <div className="flex items-center justify-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 text-[#FA2A3B]">
+          <FaUserPlus className="text-[#E02032]" /> Assign Rider to Parcels
+        </h1>
+      </div>
 
       {/* Desktop Table */}
       <div className="overflow-x-auto rounded-xl shadow-lg border mb-10 mt-10 border-gray-100 backdrop-blur-sm hidden sm:block">
