@@ -84,45 +84,54 @@ const DashboardLayout = () => {
               Home
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/dashboard/myParcels"
-              className={({ isActive }) =>
-                `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-6 gap-2 ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaBoxOpen className="w-5 h-5" />
-              My Parcels
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/paymentHistory"
-              className={({ isActive }) =>
-                `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-5 gap-2 ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaCreditCard className="w-5 h-5" />
-              My Payment History
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/track"
-              className={({ isActive }) =>
-                `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-5 gap-2 ${
-                  isActive ? "bg-base-300 rounded-lg font-semibold" : ""
-                }`
-              }
-            >
-              <FaRoute className="w-5 h-5" />
-              Track Parcel
-            </NavLink>
-          </li>
+          {roleLoading
+            ? null
+            : (role === "user" || role === "admin") && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/dashboard/myParcels"
+                      className={({ isActive }) =>
+                        `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-6 gap-2 ${
+                          isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                        }`
+                      }
+                    >
+                      <FaBoxOpen className="w-5 h-5" />
+                      My Parcels
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/dashboard/paymentHistory"
+                      className={({ isActive }) =>
+                        `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-5 gap-2 ${
+                          isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                        }`
+                      }
+                    >
+                      <FaCreditCard className="w-5 h-5" />
+                      My Payment History
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/dashboard/track"
+                      className={({ isActive }) =>
+                        `flex items-center text-[#FA2A3B] hover:text-[#E02032] mt-5 gap-2 ${
+                          isActive ? "bg-base-300 rounded-lg font-semibold" : ""
+                        }`
+                      }
+                    >
+                      <FaRoute className="w-5 h-5" />
+                      Track Parcel
+                    </NavLink>
+                  </li>
+                </>
+              )}
+
           {!roleLoading && role === "rider" && (
             <>
               <li>
