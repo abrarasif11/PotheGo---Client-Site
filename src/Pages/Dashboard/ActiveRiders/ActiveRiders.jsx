@@ -47,7 +47,7 @@ const ActiveRiders = () => {
   return (
     <div className="p-6 bg-gradient-to-br from-white to-[#fff5f5] min-h-screen">
       <div className="flex items-center justify-center mt-5">
-        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
+        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 mb-10 text-center text-[#FA2A3B]">
           <FaUserCheck className="text-[#E02032]" /> Active Riders
         </h1>
       </div>
