@@ -57,7 +57,7 @@ const PendingRiders = () => {
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-white to-[#fff5f5]">
       <div className="flex items-center justify-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 text-[#FA2A3B]">
+        <h1 className="text-3xl sm:text-4xl font-bold mt-5 flex items-center gap-3 text-[#FA2A3B]">
           <FaUserClock className="text-[#E02032]" /> Pending Riders
         </h1>
       </div>
