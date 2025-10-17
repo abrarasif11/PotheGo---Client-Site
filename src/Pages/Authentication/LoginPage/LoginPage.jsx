@@ -141,6 +141,14 @@ const LoginPage = () => {
 
             {/* Google Login */}
             <SocialLogin />
+            <p className="text-sm text-center ">
+              <Link
+                to="/beArider"
+                className="text-white bg-[#FA2A3B] hover:bg-[#E02032] btn font-medium"
+              >
+                Be a Rider ?{" "}
+              </Link>
+            </p>
           </form>
         </div>
 
