@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { FaEye, FaCheck, FaTimes } from "react-icons/fa";
+import { FaEye, FaCheck, FaTimes, FaUserClock } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
@@ -56,9 +56,11 @@ const PendingRiders = () => {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-white to-[#fff5f5]">
-      <h2 className="text-3xl font-bold text-center mb-8 text-[#E02032]">
-        Pending Riders
-      </h2>
+      <div className="flex items-center justify-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 text-[#FA2A3B]">
+          <FaUserClock className="text-[#E02032]" /> Pending Riders
+        </h1>
+      </div>
 
       {riders.length === 0 ? (
         <p className="text-center text-gray-500">No pending riders found.</p>
