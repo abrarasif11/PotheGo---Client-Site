@@ -29,8 +29,6 @@ const SignUpPage = () => {
     try {
       setUploading(true);
       let imageUrl = "";
-
-      // Upload image to ImgBB
       if (data.image && data.image[0]) {
         const file = data.image[0];
         const formData = new FormData();
@@ -52,11 +50,9 @@ const SignUpPage = () => {
         }
       }
 
-      // Create user in Firebase
       const userRes = await createUser(data.email, data.password);
       console.log("Firebase user created:", userRes.user);
 
-      // Update user info on DB
       const userInfo = {
         email: data.email,
         role: "user",
@@ -66,8 +62,6 @@ const SignUpPage = () => {
 
       const userR = await axiosInstance.post("users", userInfo);
       console.log(userR.data);
-
-      // Update Firebase profile
       await updateProfile(userRes.user, {
         displayName: data.name,
         photoURL: imageUrl || null,
