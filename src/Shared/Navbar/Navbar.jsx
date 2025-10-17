@@ -1,9 +1,13 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import useUserRole from "../../hooks/useUserRole";
+import Loader from "../Loader/Loader";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  const { role, roleLoading } = useUserRole();
+  if (roleLoading) return <Loader />;
 
   const handleLogOut = () => {
     logOut()
@@ -53,18 +57,20 @@ const Navbar = () => {
           <NavLink to="/dashboard">Dashboard</NavLink>
         </li>
       )}
-      <li>
-        <NavLink
-          to="/beArider"
-          className={({ isActive }) =>
-            isActive
-              ? "text-[#FA2A3B] font-semibold underline"
-              : "text-[#FA2A3B] hover:underline"
-          }
-        >
-          Be a rider
-        </NavLink>
-      </li>
+      {!roleLoading && role === "rider" && "user" && (
+        <li>
+          <NavLink
+            to="/beArider"
+            className={({ isActive }) =>
+              isActive
+                ? "text-[#FA2A3B] font-semibold underline"
+                : "text-[#FA2A3B] hover:underline"
+            }
+          >
+            Be a rider
+          </NavLink>
+        </li>
+      )}
     </>
   );
   return (
