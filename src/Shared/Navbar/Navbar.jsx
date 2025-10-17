@@ -57,7 +57,7 @@ const Navbar = () => {
           <NavLink to="/dashboard">Dashboard</NavLink>
         </li>
       )}
-      {!roleLoading && role === "rider" && "user" && (
+      {!roleLoading && (role === "user" || role === "rider") && (
         <li>
           <NavLink
             to="/beArider"
@@ -67,7 +67,7 @@ const Navbar = () => {
                 : "text-[#FA2A3B] hover:underline"
             }
           >
-            Be a rider
+            Be a Rider
           </NavLink>
         </li>
       )}
