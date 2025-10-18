@@ -75,9 +75,9 @@ Riders manage deliveries efficiently, while admins have **live analytics dashboa
 ### 🛡 Admin Features
 - Manage users & riders.  
 - Monitor all parcels & disputes.  
-- Analytics dashboard with live charts:
+- Analytics dashboard with **animated live charts**:
 
-![Admin Dashboard GIF](https://media.giphy.com/media/l0HlQ7LRalK3q9V4A/giphy.gif)  
+![Admin Dashboard Animated Pie Chart](https://media.giphy.com/media/3o7TKpdUSOwSk5MQpG/giphy.gif)  
 
 ---
 
