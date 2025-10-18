@@ -90,7 +90,6 @@ const AssignRider = () => {
       // Close modal
       setSelectedParcel(null);
       setSelectedRider(null);
-
     } catch (err) {
       console.error("Error assigning rider:", err);
       Swal.fire({
@@ -150,7 +149,9 @@ const AssignRider = () => {
                 </td>
                 <td className="px-4 sm:px-6 py-3">
                   <p className="font-semibold">{parcel.receiverName}</p>
-                  <p className="text-xs text-gray-600">{parcel.receiverRegion}</p>
+                  <p className="text-xs text-gray-600">
+                    {parcel.receiverRegion}
+                  </p>
                 </td>
                 <td className="px-4 sm:px-6 py-3">
                   <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
