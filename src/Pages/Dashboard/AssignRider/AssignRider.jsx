@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "../../../Shared/Loader/Loader";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -11,6 +11,7 @@ const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
   const { logTracking } = useTrackingLogger();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedParcel, setSelectedParcel] = useState(null);
   const [selectedRider, setSelectedRider] = useState(null);
 
@@ -18,7 +19,6 @@ const AssignRider = () => {
     data: parcels = [],
     isLoading,
     isError,
-    refetch: refetchParcels,
   } = useQuery({
     queryKey: ["parcels-for-assign"],
     queryFn: async () => (await axiosSecure.get("parcels")).data,
@@ -59,6 +59,8 @@ const AssignRider = () => {
       );
 
       const updatedParcel = res.data.parcel;
+
+      // Log tracking
       await logTracking({
         trackingId: updatedParcel.trackingId,
         status: "RIDER ASSIGNED",
@@ -66,6 +68,14 @@ const AssignRider = () => {
         deliveryInstruction: updatedParcel.deliveryInstruction || "",
         updatedBy: user?.email || "system",
       });
+
+      // Update parcel in React Query cache instantly
+      queryClient.setQueryData(["parcels-for-assign"], (oldData) =>
+        oldData.map((p) =>
+          p._id === updatedParcel._id ? { ...p, riderAssigned: true } : p
+        )
+      );
+
       Swal.fire({
         icon: "success",
         title: "Rider Assigned!",
@@ -77,9 +87,10 @@ const AssignRider = () => {
         confirmButtonColor: "#FA2A3B",
       });
 
-      refetchParcels();
+      // Close modal
       setSelectedParcel(null);
       setSelectedRider(null);
+
     } catch (err) {
       console.error("Error assigning rider:", err);
       Swal.fire({
@@ -139,9 +150,7 @@ const AssignRider = () => {
                 </td>
                 <td className="px-4 sm:px-6 py-3">
                   <p className="font-semibold">{parcel.receiverName}</p>
-                  <p className="text-xs text-gray-600">
-                    {parcel.receiverRegion}
-                  </p>
+                  <p className="text-xs text-gray-600">{parcel.receiverRegion}</p>
                 </td>
                 <td className="px-4 sm:px-6 py-3">
                   <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
@@ -165,7 +174,12 @@ const AssignRider = () => {
                 <td className="px-4 sm:px-6 py-3 text-center">
                   <button
                     onClick={() => handleAssignClick(parcel)}
-                    className="bg-[#FA2A3B] text-white px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-[#E02032] hover:scale-105 transition-all"
+                    disabled={parcel.riderAssigned}
+                    className={`px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                      parcel.riderAssigned
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-[#FA2A3B] text-white hover:bg-[#E02032] hover:scale-105"
+                    }`}
                   >
                     Assign Rider
                   </button>
@@ -216,7 +230,12 @@ const AssignRider = () => {
             </p>
             <button
               onClick={() => handleAssignClick(parcel)}
-              className="w-full bg-[#FA2A3B] text-white py-2 rounded-lg font-semibold hover:bg-[#E02032] hover:scale-105 transition-all"
+              disabled={parcel.riderAssigned}
+              className={`w-full py-2 rounded-lg font-semibold transition ${
+                parcel.riderAssigned
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#FA2A3B] text-white hover:bg-[#E02032] hover:scale-105"
+              }`}
             >
               Assign Rider
             </button>
